@@ -126,15 +126,24 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 @media(max-width:650px){.report-patient-grid{grid-template-columns:1fr}.report-patient-grid>div:nth-child(odd){border-right:0}.report-patient-grid>div{grid-template-columns:105px minmax(0,1fr)}.report-qr{width:66px;flex-basis:66px}.report-qr img{width:54px;height:54px}.report-brand-text h1{font-size:18px}}
 @media print{.report-patient-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;box-shadow:none!important}.report-patient-grid>div{display:grid!important;grid-template-columns:118px minmax(0,1fr)!important;padding:8px!important}.report-qr{display:block!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
+
+/* Reference report footer: five consultant blocks remain visible on screen and print. */
+.report-footer-doctors{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;border-top:2px solid #222!important;padding-top:7px!important;margin-top:24px!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
+.report-footer-doctors>div{min-width:0!important;font-size:10px!important;line-height:1.25!important;overflow-wrap:anywhere!important}
+.report-footer-doctors strong{display:block!important;font-size:10px!important;font-weight:800!important;margin-bottom:5px!important;color:#111!important}
+.report-footer-doctors small{display:block!important;font-size:8px!important;line-height:1.4!important;color:#222!important}
+@media(max-width:650px){.report-footer-doctors{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media print{.report-footer-doctors{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;margin-top:24px!important}.report-footer-doctors>div{font-size:9px!important}.report-footer-doctors strong{font-size:9px!important}.report-footer-doctors small{font-size:7.5px!important}.report-doctor-name,.report-doctor-second{display:block!important}.report-urdu{display:block!important}}
+
 /* Reference-inspired clean diagnostic report layout; keep all consultant names exactly as supplied. */
 .report-paper{font-family:Arial,Helvetica,sans-serif!important;color:#161c27!important;border-radius:0!important;box-shadow:none!important;padding:18px!important;border:0!important}
 .report-brand{border-bottom:1px solid #77808d!important;gap:12px!important;padding-bottom:13px!important}
 .report-logo{border-radius:0!important;background:#fff!important;border:0!important;box-shadow:none!important;color:#102b4e!important;width:76px!important;flex-basis:76px!important}
 .report-logo svg circle{fill:#fff!important;stroke:#fff!important}.report-logo svg g{stroke:#102b4e!important}.report-logo svg text{fill:#102b4e!important}
 .report-brand-text h1{font-size:27px!important;letter-spacing:.2px!important;color:#102b4e!important}
-.report-urdu{display:none!important}
+.report-urdu{display:block!important;color:#17665f!important;font-size:14px!important;margin-top:2px!important}
 .report-contact{font-size:10px!important;color:#172536!important}
-.report-doctor-name,.report-doctor-second{display:none!important}
+.report-doctor-name,.report-doctor-second{display:block!important;font-size:11px!important;color:#172536!important;margin-top:3px!important}
 .report-qr{border:0!important;border-radius:0!important;padding:0!important;width:76px!important;flex-basis:76px!important}
 .report-qr img{width:72px!important;height:72px!important}
 .report-section-title{background:#fff!important;color:#102b4e!important;border-left:4px solid #168a91!important;border-radius:0!important;padding:5px 9px!important;margin:12px 0 7px!important;font-size:18px!important;letter-spacing:0!important}
