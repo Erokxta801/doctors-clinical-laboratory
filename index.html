@@ -67,6 +67,42 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
   .report-status,.report-flag,.flag,.status-flag,.result-flag,.abnormal-flag,.report-price,.report-billing,.price,.billing,.total-bill,.discount,.due{display:none!important}
 }
 
+
+/* FINAL REPORT VISIBILITY FIX: keep lab header and patient details visible; hide only flag/status and billing fields. */
+#reportArea { display:block; color:#172536; }
+#reportArea .report-paper { display:block; visibility:visible; color:#172536; background:#fff; }
+#reportArea .report-brand, #reportArea .report-brand-text, #reportArea .report-urdu,
+#reportArea .report-section-title, #reportArea .report-patient-grid,
+#reportArea .report-patient-grid>div, #reportArea .report-table,
+#reportArea .report-table thead, #reportArea .report-table tbody,
+#reportArea .report-table tr, #reportArea .report-table th, #reportArea .report-table td {
+  visibility:visible;
+}
+#reportArea .report-flag, #reportArea .report-status, #reportArea .flag,
+#reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag,
+#reportArea .report-price, #reportArea .report-billing, #reportArea .price,
+#reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due {
+  display:none!important;
+}
+@media print {
+  body * { visibility:hidden; }
+  #reportArea, #reportArea * { visibility:visible!important; }
+  #reportArea { display:block!important; position:absolute; left:0; top:0; width:100%; }
+  #reportArea .report-paper { display:block!important; width:100%!important; margin:0!important; padding:0!important; border:0!important; }
+  #reportArea .report-brand { display:flex!important; }
+  #reportArea .report-patient-grid { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  #reportArea .report-table { display:table!important; width:100%!important; }
+  #reportArea .report-table thead { display:table-header-group!important; }
+  #reportArea .report-table tbody { display:table-row-group!important; }
+  #reportArea .report-table tr { display:table-row!important; }
+  #reportArea .report-table th, #reportArea .report-table td { display:table-cell!important; }
+  #reportArea .report-flag, #reportArea .report-status, #reportArea .flag,
+  #reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag,
+  #reportArea .report-price, #reportArea .report-billing, #reportArea .price,
+  #reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due {
+    display:none!important;
+  }
+}
 </style>
 </head>
 <body>
