@@ -32,7 +32,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <label style="margin-top:10px">Password</label><input id="password" type="password" placeholder="Enter demo password" autocomplete="current-password">
 <button id="loginButton" type="button">Log in</button>
 <p id="loginmsg" class="small"></p>
-<div class="notice">Use only your authorized lab account. Database access depends on your Supabase Row Level Security policies. Before saving billing fields, run the SQL migration provided with this update. Test with sample records before real use.</div>
+<div class="notice">Use only your authorized lab account. Database access depends on your Supabase Row Level Security policies. Billing fields should match the database columns: total_bill, discount, amount_paid and due. Test with sample records before real use.</div>
 </div>
 <div id="app">
 <main>
@@ -237,7 +237,7 @@ function calc(){}
 async function savePatient(e){
  e.preventDefault();const editId=document.getElementById('editId').value;
  calculateBill();
- const patientPayload={lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),patient_name:document.getElementById('pname').value.trim(),age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,gender:document.getElementById('gender').value||null,phone:document.getElementById('mobile').value.trim()||null,referring_doctor:document.getElementById('doctor').value.trim()||null,address:null,total_bill:Number(document.getElementById('totalBill').value||0),discount_amount:Number(document.getElementById('discountAmount').value||0),amount_paid:Number(document.getElementById('amountPaid').value||0),due_amount:Number(document.getElementById('dueAmount').value||0)};
+ const patientPayload={lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),patient_name:document.getElementById('pname').value.trim(),age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,gender:document.getElementById('gender').value||null,phone:document.getElementById('mobile').value.trim()||null,referring_doctor:document.getElementById('doctor').value.trim()||null,address:null,total_bill:Number(document.getElementById('totalBill').value||0),discount:Number(document.getElementById('discountAmount').value||0),amount_paid:Number(document.getElementById('amountPaid').value||0),due:Number(document.getElementById('dueAmount').value||0)};
  const orders=[...document.querySelectorAll('.orderrow')].map(r=>({name:r.querySelector('.oname').value,price:r.querySelector('.oprice').value})).filter(t=>t.name);
  try{let patientId;if(editId){const {data,error}=await supabaseClient.from('patients').update(patientPayload).eq('id',Number(editId)).select().single();if(error)throw error;patientId=data.id;}else{const {data,error}=await supabaseClient.from('patients').insert(patientPayload).select().single();if(error)throw error;patientId=data.id;}
  if(orders.length){const rows=orders.map(t=>({patient_id:Number(patientId),test_name:t.name,result_value:null,unit:null,reference_range:suggestedRange(t.name)||null,result_status:'Pending',remarks:priceRemark(t.price)||null}));const {error}=await supabaseClient.from('test_results').insert(rows);if(error)throw error;}
@@ -265,7 +265,7 @@ async function loadPatients(){
   patients=(patientRows||[]).map(p=>({
     id:String(p.id), dbid:p.id, labno:p.lab_number, date:(p.created_at||'').slice(0,10), time:(p.created_at||'').slice(11,16),
     name:p.patient_name, age:p.age_years==null?'':String(p.age_years), gender:p.gender||'',
-    mobile:p.phone||'', doctor:p.referring_doctor||'', totalBill:Number(p.total_bill||0), discountAmount:Number(p.discount_amount||0), amountPaid:Number(p.amount_paid||0), dueAmount:Number(p.due_amount||0),
+    mobile:p.phone||'', doctor:p.referring_doctor||'', totalBill:Number(p.total_bill||0), discountAmount:Number(p.discount||0), amountPaid:Number(p.amount_paid||0), dueAmount:Number(p.due||0),
     tests:(resultRows||[]).filter(r=>r.patient_id===p.id).map(r=>({
       dbid:r.id, name:r.test_name, result:r.result_value||'', range:r.reference_range||'', unit:r.unit||'', price:parsePrice(r.remarks)
     }))
