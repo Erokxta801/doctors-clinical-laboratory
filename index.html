@@ -105,28 +105,14 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
     display:none!important;
   }
 }
+
+/* Final verified layout settings */
+#loginmsg{font-size:12px;line-height:1.4;margin-top:8px}
+.report-doctor-name{font-weight:800!important;font-size:16px!important;color:#102b4e!important;background:#f2f6fa!important;border-left:4px solid #c5a45b!important;padding:6px 10px!important;margin-top:8px!important}
+.report-contact{color:#526579!important}
+@media print{ @page{size:A4 portrait;margin:12mm} .report-doctor-name{font-weight:800!important;color:#102b4e!important;background:#f2f6fa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact} .report-contact{color:#526579!important} .report-section-title,.report-table th{background:#102b4e!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact} }
 </style>
 
-/* FINAL PRINT FIX: keep report header and patient details visible; hide only flag/status and billing. */
-@media print {
-  html, body { height:auto!important; overflow:visible!important; }
-  body * { visibility:hidden; }
-  #tab-report, #tab-report *, #reportArea, #reportArea * { visibility:visible!important; }
-  header, .tabs, .no-print, #tab-report>h2, #tab-report>label, #reportSelect { display:none!important; }
-  #app, main, #tab-report { display:block!important; position:static!important; width:auto!important; height:auto!important; overflow:visible!important; }
-  #reportArea { display:block!important; position:static!important; visibility:visible!important; width:100%!important; height:auto!important; overflow:visible!important; }
-  #reportArea .report-paper { display:block!important; visibility:visible!important; position:static!important; width:100%!important; max-width:none!important; height:auto!important; overflow:visible!important; margin:0!important; padding:0!important; border:0!important; background:#fff!important; color:#172536!important; }
-  #reportArea .report-brand { display:flex!important; visibility:visible!important; }
-  #reportArea .report-brand-text, #reportArea .report-brand-text h1, #reportArea .report-urdu, #reportArea .report-contact, #reportArea .report-section-title { display:block!important; visibility:visible!important; color:#102b4e!important; }
-  #reportArea .report-patient-grid { display:grid!important; visibility:visible!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; }
-  #reportArea .report-patient-grid>div { display:flex!important; visibility:visible!important; }
-  #reportArea .report-table { display:table!important; visibility:visible!important; width:100%!important; border-collapse:collapse!important; }
-  #reportArea .report-table thead { display:table-header-group!important; }
-  #reportArea .report-table tbody { display:table-row-group!important; }
-  #reportArea .report-table tr { display:table-row!important; }
-  #reportArea .report-table th, #reportArea .report-table td { display:table-cell!important; visibility:visible!important; }
-  #reportArea .report-status, #reportArea .report-flag, #reportArea .flag, #reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag, #reportArea .report-price, #reportArea .report-billing, #reportArea .price, #reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due { display:none!important; }
-}
 
 </head>
 <body>
@@ -137,8 +123,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <label>Admin Email</label><input id="username" type="email" placeholder="Your Supabase user email" autocomplete="username">
 <label style="margin-top:10px">Password</label><input id="password" type="password" placeholder="Enter demo password" autocomplete="current-password">
 <button id="loginButton" type="button">Log in</button>
-<p id="loginmsg" class="small"></p>
-<div class="notice">Use only your authorized lab account. Database access depends on your Supabase Row Level Security policies. Billing fields should match the database columns: total_bill, discount, amount_paid and due. Test with sample records before real use.</div>
+<p id="loginmsg" class="small" role="status" aria-live="polite" style="color:#b42318;overflow-wrap:anywhere"></p>
+
 </div>
 <div id="app">
 <main>
@@ -438,7 +424,7 @@ function renderReport(){
   a.innerHTML=`<div class="report-paper">
     <div class="report-brand">
       <div class="report-logo" aria-hidden="true">✚</div>
-      <div class="report-brand-text"><h1>Doctors Clinical Laboratory</h1><div class="report-urdu" lang="ur" dir="rtl">ڈاکٹرز کلینیکل لیبارٹری</div><div class="report-contact">Laboratory Diagnostic Report <span>•</span> Location: Kamalia <span>•</span> 03060000801</div><div class="report-doctor-name"><strong>Dr Tajammal Hussain (Pharmacist)</strong></div></div>
+      <div class="report-brand-text"><h1>Doctors Clinical Laboratory</h1><div class="report-urdu" lang="ur" dir="rtl">ڈاکٹرز کلینیکل لیبارٹری</div><div class="report-contact"><strong>Laboratory Diagnostic Report</strong> <span>•</span> <strong>Location: Kamalia</strong> <span>•</span> 03060000801</div><div class="report-doctor-name"><strong>Dr Tajammal Hussain (Pharmacist)</strong></div></div>
     </div>
     <div class="report-section-title">LABORATORY REPORT <span lang="ur" dir="rtl">لیبارٹری رپورٹ</span></div>
     <div class="report-patient-grid">
