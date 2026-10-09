@@ -111,6 +111,20 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 .report-doctor-name{font-weight:800!important;font-size:16px!important;color:#102b4e!important;background:#f2f6fa!important;border-left:4px solid #c5a45b!important;padding:6px 10px!important;margin-top:8px!important}
 .report-contact{color:#526579!important}
 @media print{ @page{size:A4 portrait;margin:12mm} .report-doctor-name{font-weight:800!important;color:#102b4e!important;background:#f2f6fa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact} .report-contact{color:#526579!important} .report-section-title,.report-table th{background:#102b4e!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact} }
+
+/* Refined patient details block: aligned labels, readable typography and QR badge */
+.report-brand{align-items:center;position:relative;gap:14px}
+.report-brand-text{flex:1;min-width:0}
+.report-patient-grid{grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #cbd7e3;border-radius:9px;background:#fff;box-shadow:0 2px 8px rgba(16,43,78,.05)}
+.report-patient-grid>div{display:grid;grid-template-columns:118px minmax(0,1fr);align-items:center;gap:8px;padding:10px 12px;min-height:40px;border-bottom:1px solid #e4eaf0;min-width:0}
+.report-patient-grid>div:nth-child(odd){border-right:1px solid #e4eaf0}
+.report-patient-grid b{font-family:Arial,sans-serif;font-size:11px;font-weight:700;color:#53677e;min-width:0;line-height:1.35}
+.report-patient-grid span{font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#142b45;overflow-wrap:anywhere;line-height:1.4}
+.report-qr{width:86px;flex:0 0 86px;text-align:center;padding:5px;border:1px solid #d7e0e8;border-radius:7px;background:#fff}
+.report-qr img{display:block;width:72px;height:72px;margin:0 auto;image-rendering:pixelated}
+.report-qr small{display:block;font:700 8px Arial,sans-serif;color:#53677e;margin-top:3px;letter-spacing:.4px}
+@media(max-width:650px){.report-patient-grid{grid-template-columns:1fr}.report-patient-grid>div:nth-child(odd){border-right:0}.report-patient-grid>div{grid-template-columns:105px minmax(0,1fr)}.report-qr{width:66px;flex-basis:66px}.report-qr img{width:54px;height:54px}.report-brand-text h1{font-size:18px}}
+@media print{.report-patient-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;box-shadow:none!important}.report-patient-grid>div{display:grid!important;grid-template-columns:118px minmax(0,1fr)!important;padding:8px!important}.report-qr{display:block!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 
 
@@ -425,15 +439,18 @@ function renderReport(){
     <div class="report-brand">
       <div class="report-logo" aria-hidden="true">✚</div>
       <div class="report-brand-text"><h1>Doctors Clinical Laboratory</h1><div class="report-urdu" lang="ur" dir="rtl">ڈاکٹرز کلینیکل لیبارٹری</div><div class="report-contact"><strong>Laboratory Diagnostic Report</strong> <span>•</span> <strong>Location: Kamalia</strong> <span>•</span> 03060000801</div><div class="report-doctor-name"><strong>Dr Tajammal Hussain (Pharmacist)</strong></div></div>
+      <div class="report-qr"><img alt="QR code for lab number" loading="eager" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent('Doctors Clinical Laboratory | Lab No: '+(p.labno||'Not assigned')+' | Location: Kamalia')}" /><small>LAB QR</small></div>
     </div>
     <div class="report-section-title">LABORATORY REPORT <span lang="ur" dir="rtl">لیبارٹری رپورٹ</span></div>
     <div class="report-patient-grid">
       <div><b>Patient Name</b><span>${esc(p.name||'—')}</span></div>
       <div><b>Lab Number</b><span>${esc(p.labno||'—')}</span></div>
-      <div><b>Age / Gender</b><span>${esc(p.age||'—')} / ${esc(p.gender||'—')}</span></div>
-      <div><b>Referred By</b><span>${esc(p.doctor||'—')}</span></div>
-      <div><b>Date</b><span>${esc(p.date||'—')}</span></div>
-      <div><b>Contact</b><span>${esc(p.mobile||'—')}</span></div>
+      <div><b>Age</b><span>${esc(p.age||'—')}</span></div>
+      <div><b>Sex / Gender</b><span>${esc(p.gender||'—')}</span></div>
+      <div><b>Reference</b><span>${esc(p.doctor||'—')}</span></div>
+      <div><b>Phone Number</b><span>${esc(p.mobile||'—')}</span></div>
+      <div><b>Report Date</b><span>${esc(p.date||'—')}</span></div>
+      <div><b>Location</b><span>Kamalia</span></div>
     </div>
     <table class="report-table">
       <thead><tr><th>Test Name</th><th>Result</th><th>Reference / Normal Value</th></tr></thead>
