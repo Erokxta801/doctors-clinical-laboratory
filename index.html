@@ -479,7 +479,7 @@ async function login(){
     addTest(); await refreshSelect(); await refreshResultPatientSelect(); await renderRecords();
     msg.textContent='';
   } catch(err) {
-    msg.textContent='Login/connection failed: '+(err.message||'Please check email, password and policies.');
+    msg.textContent='Login failed. Check your email and password.';
     console.error(err);
   }
 }
