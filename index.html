@@ -15,8 +15,8 @@ label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}input,selec
 table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f3f6fa}
 .small{font-size:12px;color:#5b6b7b}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#fff2cc;color:#735300;font-size:12px}
 #app{display:none}#login{max-width:420px;margin:30px auto}.notice{border-left:4px solid #d98e04;background:#fff8e8;padding:10px 12px;font-size:13px;line-height:1.45}
-.testrow{display:grid;grid-template-columns:1.2fr 1fr 1.4fr auto auto auto;gap:6px;margin:7px 0}.labbrand{display:flex;align-items:center;gap:12px}.lab-logo{width:54px;height:54px;flex:0 0 54px}.phone{font-weight:700;color:#fff;margin-top:5px}
-@media(max-width:650px){.row,.row3{grid-template-columns:1fr}.testrow{grid-template-columns:1fr 1fr}.testrow>*{min-width:0}.lab-logo{width:44px;height:44px;flex-basis:44px}header h1{font-size:19px}table{font-size:12px}th,td{padding:7px 4px}}
+.testrow{display:grid;grid-template-columns:1.5fr 1fr 1.5fr auto auto auto;gap:6px;margin:7px 0}.orderrow{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin:7px 0}.subhead{margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:6px}.labbrand{display:flex;align-items:center;gap:12px}.lab-logo{width:54px;height:54px;flex:0 0 54px}.phone{font-weight:700;color:#fff;margin-top:5px}
+@media(max-width:650px){.row,.row3{grid-template-columns:1fr}.testrow,.orderrow{grid-template-columns:1fr 1fr}.testrow>*{min-width:0}.lab-logo{width:44px;height:44px;flex-basis:44px}header h1{font-size:19px}table{font-size:12px}th,td{padding:7px 4px}}
 @media print{header,.no-print,#app>.notice{display:none!important}body{background:#fff}.card{box-shadow:none;border:0}main{margin:0;max-width:none;padding:0}.report-head{text-align:center}.report-head h2{margin-bottom:3px}.report-table th{background:#eee!important} }
 </style>
 </head>
@@ -52,31 +52,34 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <div><label>Patient Name *</label><input id="pname" required></div>
 <div><label>Age</label><input id="age" placeholder="e.g. 32"></div>
 <div><label>Gender</label><select id="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-<div><label>Mobile Number</label><input id="mobile" inputmode="tel"></div>
-<div><label>Referred By / Doctor</label><input id="doctor"></div>
+<div><label>Phone Number</label><input id="mobile" inputmode="tel" placeholder="03xxxxxxxxx"></div>
+<div><label>Reference / Referred By Doctor</label><input id="doctor" placeholder="Doctor name"></div>
 <div><label>Lab Number</label><input id="labno" placeholder="Auto-generated if blank"></div>
-<div><label>Date</label><input id="date" type="date"></div>
-
+<div><label>Date (automatic)</label><input id="date" type="date" readonly></div>
+<div><label>Time (automatic)</label><input id="patientTime" type="time" readonly></div>
 </div>
-<p class="small">پہلے مریض کی معلومات محفوظ کریں۔ اس کے بعد “2. Add Report Values” میں مریض منتخب کرکے ٹیسٹ اور رزلٹ درج کریں۔</p>
-<button type="submit">Save Patient</button><button type="button" class="secondary" onclick="resetForm()">Clear Form</button>
+<h3 class="subhead">Add Tests & Prices / ٹیسٹ اور قیمتیں</h3>
+<p class="small">پہلے مریض کی تفصیل درج کریں، پھر مطلوبہ ٹیسٹ اور ہر ٹیسٹ کی قیمت شامل کریں۔ Save کرنے پر مریض اور منتخب ٹیسٹ محفوظ ہوں گے؛ رزلٹ بعد میں Report Values میں درج کریں۔</p>
+<div id="orderTests"></div>
+<button type="button" class="secondary" onclick="addOrderTest()">+ Add Test</button>
+<button type="submit">Save Patient & Tests</button><button type="button" class="secondary" onclick="resetForm()">Clear Form</button>
 </form>
 </section>
 <section id="tab-results" class="card" style="display:none">
-<h2>Report Values / ٹیسٹ رزلٹ درج کریں</h2>
-<label>Choose saved patient *</label><select id="resultPatientSelect"><option value="">Select saved patient</option></select>
-<p class="small">پہلے محفوظ شدہ مریض منتخب کریں، پھر ٹیسٹ اور رزلٹ درج کریں۔ Positive / Negative بٹن qualitative tests کے لیے سہولت ہیں؛ درست رزلٹ رپورٹ کے مطابق منتخب کریں۔</p>
+<h2>Enter Report Values / رپورٹ کے رزلٹ درج کریں</h2>
+<label>Choose saved patient *</label><select id="resultPatientSelect" onchange="loadPatientTestsForEntry()"><option value="">Select saved patient</option></select>
+<p class="small">مریض منتخب کریں۔ اس کے محفوظ شدہ ٹیسٹ یہاں آئیں گے؛ ہر ٹیسٹ کی ویلیو اور نارمل رینج درج کرکے Save Results کریں۔ Positive / Negative بٹن بھی دستیاب ہیں۔</p>
 <div id="tests"></div>
-<button type="button" class="secondary" onclick="addTest()">+ Add test</button>
-<button type="button" onclick="saveTestResults()">Save Test Results</button>
+<button type="button" onclick="saveTestResults()">Save Results</button>
+<button type="button" class="secondary" onclick="goToSelectedReport()">Open / Print Report</button>
 </section>
 <section id="tab-records" class="card" style="display:none">
 <h2>Patient Records</h2><label>Search by name, mobile, lab number</label><input id="search" oninput="renderRecords()" placeholder="Type to search...">
 <div style="overflow-x:auto;margin-top:10px"><table><thead><tr><th>Lab No.</th><th>Date</th><th>Patient</th><th>Tests</th><th class="no-print">Actions</th></tr></thead><tbody id="recordsBody"></tbody></table></div>
 </section>
 <section id="tab-report" class="card" style="display:none">
-<h2>Report / رپورٹ</h2><label>Choose saved patient</label><select id="reportSelect" onchange="renderReport()"><option value="">Select patient</option></select>
-<div class="no-print" style="margin:10px 0"><button type="button" onclick="openReportValues()">+ Add / Edit Test Values</button> <button type="button" class="secondary" onclick="refreshReportNow()">Refresh Report</button></div><p class="small no-print">اہم: اس صفحے پر رپورٹ دیکھی اور پرنٹ کی جاتی ہے۔ ٹیسٹ کی ویلیوز درج یا تبدیل کرنے کے لیے اوپر “Add / Edit Test Values” دبائیں۔</p><div id="reportArea"></div><div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+<h2>Report</h2><label>Choose saved patient</label><select id="reportSelect" onchange="renderReport()"><option value="">Select patient</option></select>
+<div id="reportArea"></div><div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
 </section>
 </main>
 </div>
@@ -115,34 +118,26 @@ const referenceRanges={
 };
 function suggestedRange(name){const g=document.getElementById('gender')?.value||'Other';const entry=referenceRanges[name];if(!entry)return '';return entry[g]||entry.all||entry.Other||'';}
 
+function addOrderTest(t={name:'',price:''}){const d=document.createElement('div');d.className='orderrow';d.innerHTML=`<select class="oname"><option value="">Choose test</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="oprice" type="number" min="0" step="0.01" placeholder="Price (Rs.)" value="${esc(t.price||'')}"><button type="button" class="danger" onclick="this.parentElement.remove()">Remove</button>`;document.getElementById('orderTests').appendChild(d);d.querySelector('.oname').addEventListener('change',()=>{if(d.querySelector('.oname').value==='CBC'){d.remove();['Hemoglobin (Hb)','RBC Count','Hematocrit (HCT/PCV)','MCV','MCH','MCHC','RDW-CV','TLC / WBC','Neutrophils','Lymphocytes','Monocytes','Eosinophils','Basophils','Platelet Count','MPV','PDW'].forEach(name=>addOrderTest({name,price:''}));}})}
+function parsePrice(remarks){const m=String(remarks||'').match(/PRICE:([0-9.]+)/);return m?m[1]:''}
+function priceRemark(price){return price!==''&&price!=null?'PRICE:'+price:''}
+function goToSelectedReport(){const id=document.getElementById('resultPatientSelect').value;if(!id){alert('Please select a patient first.');return;}showTab('report',document.querySelectorAll('.tabs button')[3]);refreshSelect(id)}
+async function loadPatientTestsForEntry(){const id=document.getElementById('resultPatientSelect').value;const host=document.getElementById('tests');host.innerHTML='';if(!id)return;try{await loadPatients();const p=patients.find(x=>x.id===String(id));if(!p)return;if(!p.tests.length){host.innerHTML='<p>No tests have been ordered for this patient yet. Go back to Add Patient and add tests.</p>';return;}p.tests.forEach(t=>addTest({name:t.name,result:t.result,range:t.range,unit:t.unit,price:t.price,dbid:t.dbid}));}catch(e){alert('Could not load patient tests: '+e.message)}}
 function showTab(name,btn){document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById('tab-'+name).style.display='block';document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(name==='records')renderRecords();if(name==='report')refreshSelect();if(name==='results')refreshResultPatientSelect()}
-function addTest(t={name:'',result:'',range:'',unit:''}){const d=document.createElement('div');d.className='testrow';d.innerHTML=`<select class="tname"><option value="">Choose test</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="tresult" placeholder="Result / value" value="${esc(t.result||'')}"><input class="trange" placeholder="Normal range / guidance (editable)" value="${esc(t.range||'')}"><button type="button" onclick="setTestResult(this,'Positive')">Positive</button><button type="button" class="secondary" onclick="setTestResult(this,'Negative')">Negative</button><button type="button" class="danger" onclick="this.parentElement.remove()">×</button>`;document.getElementById('tests').appendChild(d);const sel=d.querySelector('.tname');sel.addEventListener('change',()=>{if(sel.value==='CBC'){const cbcItems=['Hemoglobin (Hb)','RBC Count','Hematocrit (HCT/PCV)','MCV','MCH','MCHC','RDW-CV','TLC / WBC','Neutrophils','Lymphocytes','Monocytes','Eosinophils','Basophils','Platelet Count','MPV','PDW'];d.remove();cbcItems.forEach(name=>addTest({name,result:'',range:suggestedRange(name),unit:''}));return;}const r=d.querySelector('.trange');if(!r.value.trim())r.value=suggestedRange(sel.value)});if(!t.range&&t.name)d.querySelector('.trange').value=suggestedRange(t.name)}
+function addTest(t={name:'',result:'',range:'',unit:'',price:'',dbid:''}){const d=document.createElement('div');d.className='testrow';d.dataset.dbid=t.dbid||'';d.dataset.price=t.price||'';d.innerHTML=`<select class="tname"><option value="">Choose test</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="tresult" placeholder="Result / value" value="${esc(t.result||'')}"><input class="trange" placeholder="Normal range / guidance" value="${esc(t.range||'')}"><button type="button" onclick="setTestResult(this,'Positive')">Positive</button><button type="button" class="secondary" onclick="setTestResult(this,'Negative')">Negative</button><button type="button" class="danger" onclick="this.parentElement.remove()">×</button>`;document.getElementById('tests').appendChild(d);const sel=d.querySelector('.tname');sel.addEventListener('change',()=>{const r=d.querySelector('.trange');if(!r.value.trim())r.value=suggestedRange(sel.value)});if(!t.range&&t.name)d.querySelector('.trange').value=suggestedRange(t.name)}
 function setTestResult(btn,value){const row=btn.closest('.testrow');row.querySelector('.tresult').value=value;}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function getTests(){return [...document.querySelectorAll('.testrow')].map(r=>({name:r.querySelector('.tname').value,result:r.querySelector('.tresult').value,range:r.querySelector('.trange').value})).filter(t=>t.name||t.result)}
 function calc(){}
 
 async function savePatient(e){
-  e.preventDefault();
-  const editId=document.getElementById('editId').value;
-  const patientPayload={
-    lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),
-    patient_name:document.getElementById('pname').value.trim(),
-    age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,
-    gender:document.getElementById('gender').value||null,
-    phone:document.getElementById('mobile').value.trim()||null,
-    referring_doctor:document.getElementById('doctor').value.trim()||null,
-    address:null
-  };
-  try{
-    let patientId;
-    if(editId){const {data,error}=await supabaseClient.from('patients').update(patientPayload).eq('id',Number(editId)).select().single();if(error)throw error;patientId=data.id;}
-    else{const {data,error}=await supabaseClient.from('patients').insert(patientPayload).select().single();if(error)throw error;patientId=data.id;}
-    await loadPatients();await refreshSelect(String(patientId));await refreshResultPatientSelect(String(patientId));await renderRecords();
-    alert('Patient saved successfully. Now open “2. Add Report Values” to enter tests and results.');
-    resetForm();showTab('results',document.querySelectorAll('.tabs button')[1]);document.getElementById('resultPatientSelect').value=String(patientId);
-  }catch(err){alert('Patient save failed: '+(err.message||'Unknown error')+'\nCheck Supabase table columns and Row Level Security policies.');console.error(err);}
-}
+ e.preventDefault();const editId=document.getElementById('editId').value;
+ const patientPayload={lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),patient_name:document.getElementById('pname').value.trim(),age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,gender:document.getElementById('gender').value||null,phone:document.getElementById('mobile').value.trim()||null,referring_doctor:document.getElementById('doctor').value.trim()||null,address:null};
+ const orders=[...document.querySelectorAll('.orderrow')].map(r=>({name:r.querySelector('.oname').value,price:r.querySelector('.oprice').value})).filter(t=>t.name);
+ try{let patientId;if(editId){const {data,error}=await supabaseClient.from('patients').update(patientPayload).eq('id',Number(editId)).select().single();if(error)throw error;patientId=data.id;}else{const {data,error}=await supabaseClient.from('patients').insert(patientPayload).select().single();if(error)throw error;patientId=data.id;}
+ if(orders.length){const rows=orders.map(t=>({patient_id:Number(patientId),test_name:t.name,result_value:null,unit:null,reference_range:suggestedRange(t.name)||null,result_status:'Pending',remarks:priceRemark(t.price)||null}));const {error}=await supabaseClient.from('test_results').insert(rows);if(error)throw error;}
+ await loadPatients();await refreshSelect(String(patientId));await refreshResultPatientSelect(String(patientId));await renderRecords();alert('Patient and selected tests saved. Next, enter the test values in Report Values.');resetForm();showTab('results',document.querySelectorAll('.tabs button')[1]);document.getElementById('resultPatientSelect').value=String(patientId);await loadPatientTestsForEntry();
+ }catch(err){alert('Save failed: '+err.message+'\nPlease check Supabase table columns and RLS policies.');console.error(err)}}
 function statusFromResult(v){
   const s=String(v||'').trim().toLowerCase();
   if(s==='positive') return 'Positive';
@@ -156,25 +151,18 @@ async function refreshResultPatientSelect(selected=''){
   const s=document.getElementById('resultPatientSelect');if(!s)return;
   s.innerHTML='<option value="">Select saved patient</option>'+patients.map(p=>`<option value="${p.id}" ${p.id===String(selected)?'selected':''}>${esc(p.labno)} — ${esc(p.name)} (${esc(p.date)})</option>`).join('');
 }
-async function saveTestResults(){
-  const patientId=document.getElementById('resultPatientSelect').value;
-  if(!patientId){alert('Please save and select a patient first.');return;}
-  const rows=getTests().filter(t=>t.name).map(t=>({patient_id:Number(patientId),test_name:t.name,result_value:t.result||null,unit:null,reference_range:t.range||suggestedRange(t.name)||null,result_status:statusFromResult(t.result),remarks:null}));
-  if(!rows.length){alert('Please add at least one test.');return;}
-  try{const {error}=await supabaseClient.from('test_results').insert(rows);if(error)throw error;await loadPatients();await refreshSelect(patientId);await renderRecords();alert('Test results saved. Open Create / Print Report to review the report.');document.getElementById('tests').innerHTML='';addTest();}
-  catch(err){alert('Could not save test results: '+err.message+'\nCheck Supabase test_results columns and RLS policies.');console.error(err);}
-}
+async function saveTestResults(){const patientId=document.getElementById('resultPatientSelect').value;if(!patientId){alert('Please save and select a patient first.');return;}const rows=[...document.querySelectorAll('.testrow')].filter(r=>r.querySelector('.tname').value);if(!rows.length){alert('No tests found for this patient. Add tests first.');return;}try{for(const r of rows){const name=r.querySelector('.tname').value,result=r.querySelector('.tresult').value.trim(),range=r.querySelector('.trange').value.trim()||suggestedRange(name)||null;const id=r.dataset.dbid;const payload={patient_id:Number(patientId),test_name:name,result_value:result||null,unit:null,reference_range:range,result_status:statusFromResult(result),remarks:priceRemark(r.dataset.price)||null};let resp;if(id){resp=await supabaseClient.from('test_results').update(payload).eq('id',Number(id));}else{resp=await supabaseClient.from('test_results').insert(payload);}if(resp.error)throw resp.error;}await loadPatients();await refreshSelect(patientId);await renderRecords();alert('Results saved successfully. Open the report to print.');await loadPatientTestsForEntry();}catch(err){alert('Could not save results: '+err.message+'\nCheck Supabase test_results columns and RLS policies.');console.error(err)}}
 async function loadPatients(){
   const {data:patientRows,error:pErr}=await supabaseClient.from('patients').select('*').order('created_at',{ascending:false});
   if(pErr) throw pErr;
   const {data:resultRows,error:rErr}=await supabaseClient.from('test_results').select('*').order('created_at',{ascending:true});
   if(rErr) throw rErr;
   patients=(patientRows||[]).map(p=>({
-    id:String(p.id), dbid:p.id, labno:p.lab_number, date:(p.created_at||'').slice(0,10),
+    id:String(p.id), dbid:p.id, labno:p.lab_number, date:(p.created_at||'').slice(0,10), time:(p.created_at||'').slice(11,16),
     name:p.patient_name, age:p.age_years==null?'':String(p.age_years), gender:p.gender||'',
     mobile:p.phone||'', doctor:p.referring_doctor||'',
     tests:(resultRows||[]).filter(r=>r.patient_id===p.id).map(r=>({
-      name:r.test_name, result:r.result_value||'', range:r.reference_range||'', unit:r.unit||''
+      dbid:r.id, name:r.test_name, result:r.result_value||'', range:r.reference_range||'', unit:r.unit||'', price:parsePrice(r.remarks)
     }))
   }));
 }
@@ -182,6 +170,8 @@ function resetForm(){
   document.getElementById('patientForm').reset();
   document.getElementById('editId').value='';
   document.getElementById('date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('patientTime').value=new Date().toTimeString().slice(0,5);
+  document.getElementById('orderTests').innerHTML='';addOrderTest();
 }
 async function renderRecords(){
   const q=(document.getElementById('search')?.value||'').toLowerCase();
@@ -213,22 +203,13 @@ async function refreshSelect(selected=''){
   s.innerHTML='<option value="">Select patient</option>'+patients.map(p=>`<option value="${p.id}" ${p.id===String(selected)?'selected':''}>${esc(p.labno)} — ${esc(p.name)} (${esc(p.date)})</option>`).join('');
   if(selected)renderReport();
 }
-function selectReport(id){showTab('report',document.querySelectorAll('.tabs button')[2]);refreshSelect(id)}
-function openReportValues(){
-  const patientId=document.getElementById('reportSelect').value;
-  if(!patientId){alert('پہلے رپورٹ والے خانے سے مریض منتخب کریں۔');return;}
-  showTab('results',document.querySelectorAll('.tabs button')[1]);
-  refreshResultPatientSelect(patientId).then(()=>{document.getElementById('resultPatientSelect').value=patientId;});
-}
-function refreshReportNow(){
-  refreshSelect(document.getElementById('reportSelect').value);
-}
+function selectReport(id){showTab('report',document.querySelectorAll('.tabs button')[3]);refreshSelect(id)}
 function renderReport(){
   const p=patients.find(x=>x.id===document.getElementById('reportSelect').value),a=document.getElementById('reportArea');
   if(!p){a.innerHTML='';return}
   a.innerHTML=`<div class="report-head"><div style="display:flex;align-items:center;justify-content:center;gap:10px"><svg width="44" height="44" viewBox="0 0 100 100" aria-label="Medical logo"><circle cx="50" cy="50" r="47" fill="#fff" stroke="#168a91" stroke-width="5"/><path d="M42 17h16v25h25v16H58v25H42V58H17V42h25z" fill="#168a91"/></svg><div style="font-size:22px;font-weight:bold;color:#12345a">Doctors Clinical Laboratory</div></div><div style="font-size:17px">ڈاکٹرز کلینیکل لیبارٹری</div><div>☎ 03060000801</div><div>Laboratory Test Report</div><hr></div>
-  <div class="row3"><div><b>Patient:</b> ${esc(p.name)}</div><div><b>Age / Gender:</b> ${esc(p.age)} / ${esc(p.gender)}</div><div><b>Lab No.:</b> ${esc(p.labno)}</div><div><b>Referred by:</b> ${esc(p.doctor)}</div><div><b>Mobile:</b> ${esc(p.mobile)}</div><div><b>Date:</b> ${esc(p.date)}</div></div>
-  <h3>Test Results</h3><table class="report-table"><thead><tr><th>Test</th><th>Result</th><th>Reference Range / Guidance</th></tr></thead><tbody>${p.tests.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.result)}</td><td>${esc(t.range)}</td></tr>`).join('')}</tbody></table>
+  <div class="row3"><div><b>Patient:</b> ${esc(p.name)}</div><div><b>Age / Gender:</b> ${esc(p.age)} / ${esc(p.gender)}</div><div><b>Lab No.:</b> ${esc(p.labno)}</div><div><b>Referred by:</b> ${esc(p.doctor)}</div><div><b>Mobile:</b> ${esc(p.mobile)}</div><div><b>Date:</b> ${esc(p.date)}</div><div><b>Time:</b> ${esc(p.time||'')}</div></div>
+  <h3>Test Results</h3><table class="report-table"><thead><tr><th>Test</th><th>Result</th><th>Reference Range / Guidance</th><th>Price (Rs.)</th></tr></thead><tbody>${p.tests.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.result)}</td><td>${esc(t.range)}</td><td>${esc(t.price||'')}</td></tr>`).join('')}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Total</th><th>${p.tests.reduce((sum,t)=>sum+(Number(t.price)||0),0).toFixed(2)}</th></tr></tfoot></table>
   <p class="small">Reference ranges are examples and must be verified against the laboratory's analyzer, reagents, method, age and sex. Results require review by qualified laboratory staff before release.</p><br><p>Authorized Signature: ____________________</p>`;
 }
 
@@ -250,7 +231,7 @@ async function login(){
     if(error) throw error;
     document.getElementById('login').style.display='none';
     document.getElementById('app').style.display='block';
-    document.getElementById('date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('date').value=new Date().toISOString().slice(0,10);document.getElementById('patientTime').value=new Date().toTimeString().slice(0,5);document.getElementById('orderTests').innerHTML='';addOrderTest();
     await loadPatients();
     addTest(); await refreshSelect(); await refreshResultPatientSelect(); await renderRecords();
     msg.textContent='';
