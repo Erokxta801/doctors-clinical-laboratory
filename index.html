@@ -33,7 +33,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 </div>
 <div id="app">
 <main>
-<div class="notice"><b>Important:</b> This connected version stores records in Supabase. Use sample data first and verify access policies before real patient use. Reference values and Positive/Negative guidance are general examples only. Verify each test with your analyzer, reagent insert, kit cutoff, age and sex. Screening-positive infectious disease results require confirmatory testing; do not diagnose from this app alone.</div>
+
 <div class="tabs no-print">
 <button class="active" onclick="showTab('new',this)">1. Add Patient</button>
 <button onclick="showTab('results',this)">2. Add Report Values</button>
@@ -68,7 +68,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <section id="tab-results" class="card" style="display:none">
 <h2>Enter Report Values / رپورٹ کے رزلٹ درج کریں</h2>
 <label>Choose saved patient *</label><select id="resultPatientSelect" onchange="loadPatientTestsForEntry()"><option value="">Select saved patient</option></select>
-<p class="small">مریض منتخب کریں۔ اس کے محفوظ شدہ ٹیسٹ یہاں آئیں گے؛ ہر ٹیسٹ کی ویلیو اور نارمل رینج درج کرکے Save Results کریں۔ Positive / Negative بٹن بھی دستیاب ہیں۔</p>
+<p class="small">مریض منتخب کریں۔ اس کے محفوظ شدہ ٹیسٹ یہاں آئیں گے؛ ہر ٹیسٹ کی ویلیو اور نارمل رینج درج کرکے Save Results کریں۔ Positive / Negative بٹن صرف screening tests کے لیے دکھائے جائیں گے۔</p>
 <div id="tests"></div>
 <button type="button" onclick="saveTestResults()">Save Results</button>
 <button type="button" class="secondary" onclick="goToSelectedReport()">Open / Print Report</button>
@@ -158,13 +158,38 @@ function expandProfile(name){
 function flattenProfile(name,seen=new Set()){
  const key=String(name||'').trim(); if(seen.has(key)) return []; const parts=expandProfile(key); if(!parts) return [key]; seen.add(key); const out=[]; for(const part of parts){const nested=expandProfile(part); if(nested) out.push(...flattenProfile(part,new Set(seen))); else out.push(part);} return out;
 }
+// Editable default rates in PKR. These are starter values, not a market quote; update them to your lab's approved price list.
+const defaultPrices={
+ 'CBC':500,'LFT':800,'Liver Function Test':800,'RFT / KFT':700,'RFT':700,'KFT':700,'Renal Function Test':700,
+ 'Lipid Profile':700,'Thyroid Profile (TFT)':1800,'TFT':1800,'Urine Complete':300,'Urine DR':300,'Stool Complete':350,
+ 'Electrolytes Profile':700,'Coagulation Profile':900,'Iron Profile':1500,'H. pylori Profile':1200,'Dengue Profile':1800,
+ 'Hepatitis Screening Profile':1200,'Hepatitis Profile':1200,'Diabetes Profile':1300,'Cardiac Profile':2200,'Pancreatic Profile':1000,
+ 'Arthritis Profile':1800,'Fever Profile':2500,'Anemia Profile':2200,'Bone Profile':1800,'Pregnancy Profile':1000,
+ 'Hemoglobin (Hb)':250,'RBC Count':200,'TLC / WBC':250,'Platelet Count':250,'ALT (SGPT)':300,'AST (SGOT)':300,'Creatinine':250,
+ 'Urea':250,'Uric Acid':300,'Total Cholesterol':250,'Triglycerides':250,'HDL Cholesterol':300,'LDL Cholesterol':300,
+ 'TSH':700,'Total T3':500,'Total T4':500,'Free T3 (FT3)':700,'Free T4 (FT4)':700,'HbA1c':900,
+ 'Blood Sugar Fasting':150,'Blood Sugar Random':150,'2 Hours PP Glucose':150,'HBsAg':500,'Anti-HCV':500,'HIV 1/2 Screen':700,
+ 'Dengue NS1':800,'Dengue IgM':600,'Dengue IgG':600,'Pregnancy Test (Urine hCG)':250,'Pregnancy Test (Serum hCG)':700,
+ 'Malaria Parasite (MP)':300,'Typhoid IgM':700,'Widal Test':500,'H. pylori Rapid Test':700,'CRP':500,'ESR':250,'PT':500,'INR':250,'APTT':600,
+ 'Amylase':600,'Lipase':700,'Iron':500,'Ferritin':900,'TIBC':700,'Vitamin B12':1200,'Vitamin D (25-OH)':1800
+};
+function defaultPrice(name){
+ if(Object.prototype.hasOwnProperty.call(defaultPrices,name)) return defaultPrices[name];
+ if(/^Urine /.test(name)||/^Stool /.test(name)) return 0;
+ if(/^(Neutrophils|Lymphocytes|Monocytes|Eosinophils|Basophils|MCV|MCH|MCHC|RDW-CV|MPV|PDW|Hematocrit|Globulin|A\/G Ratio)$/.test(name)) return 0;
+ if(/Profile$/.test(name)) return 1000;
+ return 300;
+}
 function addOrderTest(t={name:'',price:''}){
  const d=document.createElement('div');d.className='orderrow';
- d.innerHTML=`<select class="oname"><option value="">Choose test / profile</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="oprice" type="number" min="0" step="0.01" placeholder="Price (Rs.)" value="${esc(t.price||'')}"><button type="button" class="danger" onclick="this.parentElement.remove()">Remove</button>`;
+ const initialPrice=t.price!==''&&t.price!=null?t.price:(t.name?defaultPrice(t.name):'');
+ d.innerHTML=`<select class="oname"><option value="">Choose test / profile</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="oprice" type="number" min="0" step="0.01" placeholder="Price (Rs.)" value="${esc(initialPrice)}"><button type="button" class="danger" onclick="this.parentElement.remove()">Remove</button>`;
  document.getElementById('orderTests').appendChild(d);
  d.querySelector('.oname').addEventListener('change',()=>{
-   const selected=d.querySelector('.oname').value;const parts=expandProfile(selected);if(!parts)return;
-   const price=d.querySelector('.oprice').value;const flattened=flattenProfile(selected);d.remove();
+   const selected=d.querySelector('.oname').value;if(!selected)return;
+   const parts=expandProfile(selected);const price=d.querySelector('.oprice').value!==''?d.querySelector('.oprice').value:String(defaultPrice(selected));
+   if(!parts){d.querySelector('.oprice').value=price;return;}
+   const flattened=flattenProfile(selected);d.remove();
    flattened.forEach((name,i)=>addOrderTest({name,price:i===0?price:'0'}));
  });
 }
@@ -173,7 +198,17 @@ function priceRemark(price){return price!==''&&price!=null?'PRICE:'+price:''}
 function goToSelectedReport(){const id=document.getElementById('resultPatientSelect').value;if(!id){alert('Please select a patient first.');return;}showTab('report',document.querySelectorAll('.tabs button')[3]);refreshSelect(id)}
 async function loadPatientTestsForEntry(){const id=document.getElementById('resultPatientSelect').value;const host=document.getElementById('tests');host.innerHTML='';if(!id)return;try{await loadPatients();const p=patients.find(x=>x.id===String(id));if(!p)return;if(!p.tests.length){host.innerHTML='<p>No tests have been ordered for this patient yet. Go back to Add Patient and add tests.</p>';return;}p.tests.forEach(t=>addTest({name:t.name,result:t.result,range:t.range,unit:t.unit,price:t.price,dbid:t.dbid}));}catch(e){alert('Could not load patient tests: '+e.message)}}
 function showTab(name,btn){document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById('tab-'+name).style.display='block';document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(name==='records')renderRecords();if(name==='report')refreshSelect();if(name==='results')refreshResultPatientSelect()}
-function addTest(t={name:'',result:'',range:'',unit:'',price:'',dbid:''}){const d=document.createElement('div');d.className='testrow';d.dataset.dbid=t.dbid||'';d.dataset.price=t.price||'';d.innerHTML=`<select class="tname"><option value="">Choose test</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="tresult" placeholder="Result / value" value="${esc(t.result||'')}"><input class="trange" placeholder="Normal range / guidance" value="${esc(t.range||'')}"><button type="button" onclick="setTestResult(this,'Positive')">Positive</button><button type="button" class="secondary" onclick="setTestResult(this,'Negative')">Negative</button><button type="button" class="danger" onclick="this.parentElement.remove()">×</button>`;document.getElementById('tests').appendChild(d);const sel=d.querySelector('.tname');sel.addEventListener('change',()=>{const r=d.querySelector('.trange');if(!r.value.trim())r.value=suggestedRange(sel.value)});if(!t.range&&t.name)d.querySelector('.trange').value=suggestedRange(t.name)}
+function isScreeningTest(name){
+ const n=String(name||'').toLowerCase();
+ return /\b(hbsag|anti-hcv|hiv|dengue (ns1|igm|igg)|malaria parasite|typhoid igm|widal|h\.? pylori (rapid test|igg|igm|stool antigen)|pregnancy test|urine hcg|serum hcg|stool occult blood|ana screen|blood group abo\/rh|coombs direct|coombs indirect)\b/.test(n);
+}
+function addTest(t={name:'',result:'',range:'',unit:'',price:'',dbid:''}){
+ const d=document.createElement('div');d.className='testrow';d.dataset.dbid=t.dbid||'';d.dataset.price=t.price||'';
+ d.innerHTML=`<select class="tname"><option value="">Choose test</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="tresult" placeholder="Result / value" value="${esc(t.result||'')}"><input class="trange" placeholder="Normal range / guidance" value="${esc(t.range||'')}"><span class="screen-buttons" style="display:${isScreeningTest(t.name)?'inline-flex':'none'};gap:4px"><button type="button" onclick="setTestResult(this,'Positive')">Positive</button><button type="button" class="secondary" onclick="setTestResult(this,'Negative')">Negative</button></span><button type="button" class="danger" onclick="this.parentElement.remove()">×</button>`;
+ document.getElementById('tests').appendChild(d);const sel=d.querySelector('.tname');
+ sel.addEventListener('change',()=>{const r=d.querySelector('.trange');if(!r.value.trim())r.value=suggestedRange(sel.value);d.querySelector('.screen-buttons').style.display=isScreeningTest(sel.value)?'inline-flex':'none';});
+ if(!t.range&&t.name)d.querySelector('.trange').value=suggestedRange(t.name);
+}
 function setTestResult(btn,value){const row=btn.closest('.testrow');row.querySelector('.tresult').value=value;}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function getTests(){return [...document.querySelectorAll('.testrow')].map(r=>({name:r.querySelector('.tname').value,result:r.querySelector('.tresult').value,range:r.querySelector('.trange').value})).filter(t=>t.name||t.result)}
