@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Doctors Clinical Laboratory</title>
 <style>
+@page{size:letter portrait;margin:0.45in}
 :root{--navy:#12345a;--teal:#168a91;--bg:#f3f6fa;--line:#dbe3ec}
 *{box-sizing:border-box}body{margin:0;font:15px Arial,sans-serif;background:var(--bg);color:#172536}
 header{background:var(--navy);color:white;padding:18px 16px}header h1{margin:0;font-size:22px}header p{margin:6px 0 0;color:#dbe9f6}
@@ -17,7 +18,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 #app{display:none}#login{max-width:420px;margin:30px auto}.notice{border-left:4px solid #d98e04;background:#fff8e8;padding:10px 12px;font-size:13px;line-height:1.45}
 .testrow{display:grid;grid-template-columns:1.5fr 1fr 1.5fr auto auto auto;gap:6px;margin:7px 0}.orderrow{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin:7px 0}.subhead{margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:6px}.labbrand{display:flex;align-items:center;gap:12px}.lab-logo{width:54px;height:54px;flex:0 0 54px}.phone{font-weight:700;color:#fff;margin-top:5px}
 @media(max-width:650px){.row,.row3{grid-template-columns:1fr}.testrow,.orderrow{grid-template-columns:1fr 1fr}.testrow>*{min-width:0}.lab-logo{width:44px;height:44px;flex-basis:44px}header h1{font-size:19px}table{font-size:12px}th,td{padding:7px 4px}}
-@media print{header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status{font-weight:bold}.report-result{font-weight:700}.report-head h2{margin:0} }
+@media print{@page{size:letter portrait;margin:0.45in}header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status{font-weight:bold}.report-result{font-weight:700}.report-head h2{margin:0}.report-paper{width:100%;max-width:none!important;page-break-inside:auto}.report-table tr{page-break-inside:avoid} }
 </style>
 </head>
 <body>
@@ -29,7 +30,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <label style="margin-top:10px">Password</label><input id="password" type="password" placeholder="Enter demo password" autocomplete="current-password">
 <button id="loginButton" type="button">Log in</button>
 <p id="loginmsg" class="small"></p>
-<div class="notice">Use only your authorized lab account. Database access depends on your Supabase Row Level Security policies. Test with sample records before real use.</div>
+<div class="notice">Use only your authorized lab account. Database access depends on your Supabase Row Level Security policies. Before saving billing fields, run the SQL migration provided with this update. Test with sample records before real use.</div>
 </div>
 <div id="app">
 <main>
@@ -62,6 +63,13 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <p class="small">پہلے مریض کی تفصیل درج کریں، پھر مطلوبہ ٹیسٹ اور ہر ٹیسٹ کی قیمت شامل کریں۔ Save کرنے پر مریض اور منتخب ٹیسٹ محفوظ ہوں گے؛ رزلٹ بعد میں Report Values میں درج کریں۔</p>
 <div id="orderTests"></div>
 <button type="button" class="secondary" onclick="addOrderTest()">+ Add Test</button>
+<div class="row3" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
+<div><label>Total Bill (Rs.)</label><input id="totalBill" type="number" min="0" step="0.01" readonly value="0"></div>
+<div><label>Discount (Rs.)</label><input id="discountAmount" type="number" min="0" step="0.01" value="0" oninput="calculateBill()"></div>
+<div><label>Amount Paid (Rs.)</label><input id="amountPaid" type="number" min="0" step="0.01" value="0" oninput="calculateBill()"></div>
+<div><label>Due (Rs.)</label><input id="dueAmount" type="number" readonly value="0"></div>
+</div>
+<p class="small">Billing is for patient entry/administration only. Prices, total, discount and due are not printed on the laboratory report.</p>
 <button type="submit">Save Patient & Tests</button><button type="button" class="secondary" onclick="resetForm()">Clear Form</button>
 </form>
 </section>
@@ -97,6 +105,7 @@ const commonTests=[
 'Urine Complete','Urine DR','Urine Color','Urine Appearance','Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals',
 'H. pylori IgG','H. pylori IgM','H. pylori Stool Antigen','CRP','hs-CRP','ESR','PT','INR','APTT','D-Dimer','Amylase','Lipase','Iron','Ferritin','TIBC','Vitamin B12','Vitamin D (25-OH)',
 'Stool Color','Stool Consistency','Stool Mucus','Stool Blood','Stool Ova','Stool Cysts','Stool Pus Cells','Stool RBC','Pregnancy Test (Urine hCG)','Pregnancy Test (Serum hCG)','HBsAg','Anti-HCV','HIV 1/2 Screen','Dengue NS1','Dengue IgM','Dengue IgG','Malaria Parasite (MP)','Typhoid IgM','Widal Test','ASO Titre','Rheumatoid Factor (RF)','Anti-CCP','ANA Screen','H. pylori Rapid Test','Stool Complete','Stool Occult Blood','Stool Reducing Substances','Blood Group ABO/Rh','Coombs Direct (DAT)','Coombs Indirect (IAT)','Semen Analysis','Other'];
+commonTests.sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:'base'}));
 const referenceRanges={
 'Hemoglobin (Hb)':{Male:'13.5–17.5 g/dL',Female:'12.0–15.5 g/dL',Other:'Adult: 12.0–17.5 g/dL'},
 'RBC Count':{Male:'4.5–5.9 ×10⁶/µL',Female:'4.1–5.1 ×10⁶/µL',Other:'Adult: 4.1–5.9 ×10⁶/µL'},
@@ -185,16 +194,25 @@ function addOrderTest(t={name:'',price:''}){
  const initialPrice=t.price!==''&&t.price!=null?t.price:(t.name?defaultPrice(t.name):'');
  d.innerHTML=`<select class="oname"><option value="">Choose test / profile</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="oprice" type="number" min="0" step="0.01" placeholder="Price (Rs.)" value="${esc(initialPrice)}"><button type="button" class="danger" onclick="this.parentElement.remove()">Remove</button>`;
  document.getElementById('orderTests').appendChild(d);
+ d.querySelector('.oprice').addEventListener('input',calculateBill);
  d.querySelector('.oname').addEventListener('change',()=>{
-   const selected=d.querySelector('.oname').value;if(!selected)return;
+   const selected=d.querySelector('.oname').value;if(!selected){calculateBill();return;}
    const parts=expandProfile(selected);const price=d.querySelector('.oprice').value!==''?d.querySelector('.oprice').value:String(defaultPrice(selected));
-   if(!parts){d.querySelector('.oprice').value=price;return;}
+   if(!parts){d.querySelector('.oprice').value=price;calculateBill();return;}
    const flattened=flattenProfile(selected);d.remove();
-   flattened.forEach((name,i)=>addOrderTest({name,price:i===0?price:'0'}));
+   flattened.forEach((name,i)=>addOrderTest({name,price:i===0?price:'0'}));calculateBill();
  });
 }
 function parsePrice(remarks){const m=String(remarks||'').match(/PRICE:([0-9.]+)/);return m?m[1]:''}
 function priceRemark(price){return price!==''&&price!=null?'PRICE:'+price:''}
+function calculateBill(){
+ const total=[...document.querySelectorAll('.orderrow')].reduce((sum,r)=>sum+Math.max(0,Number(r.querySelector('.oprice')?.value||0)),0);
+ const discount=Math.max(0,Number(document.getElementById('discountAmount')?.value||0));
+ const paid=Math.max(0,Number(document.getElementById('amountPaid')?.value||0));
+ const totalEl=document.getElementById('totalBill'),dueEl=document.getElementById('dueAmount');
+ if(totalEl)totalEl.value=total.toFixed(2).replace(/\.00$/,'');
+ if(dueEl)dueEl.value=Math.max(0,total-discount-paid).toFixed(2).replace(/\.00$/,'');
+}
 function goToSelectedReport(){const id=document.getElementById('resultPatientSelect').value;if(!id){alert('Please select a patient first.');return;}showTab('report',document.querySelectorAll('.tabs button')[3]);refreshSelect(id)}
 async function loadPatientTestsForEntry(){const id=document.getElementById('resultPatientSelect').value;const host=document.getElementById('tests');host.innerHTML='';if(!id)return;try{await loadPatients();const p=patients.find(x=>x.id===String(id));if(!p)return;if(!p.tests.length){host.innerHTML='<p>No tests have been ordered for this patient yet. Go back to Add Patient and add tests.</p>';return;}p.tests.forEach(t=>addTest({name:t.name,result:t.result,range:t.range,unit:t.unit,price:t.price,dbid:t.dbid}));}catch(e){alert('Could not load patient tests: '+e.message)}}
 function showTab(name,btn){document.querySelectorAll('main section').forEach(s=>s.style.display='none');document.getElementById('tab-'+name).style.display='block';document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(name==='records')renderRecords();if(name==='report')refreshSelect();if(name==='results')refreshResultPatientSelect()}
@@ -216,7 +234,8 @@ function calc(){}
 
 async function savePatient(e){
  e.preventDefault();const editId=document.getElementById('editId').value;
- const patientPayload={lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),patient_name:document.getElementById('pname').value.trim(),age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,gender:document.getElementById('gender').value||null,phone:document.getElementById('mobile').value.trim()||null,referring_doctor:document.getElementById('doctor').value.trim()||null,address:null};
+ calculateBill();
+ const patientPayload={lab_number:document.getElementById('labno').value.trim()||('DCL-'+Date.now().toString().slice(-8)),patient_name:document.getElementById('pname').value.trim(),age_years:/^\d+$/.test(document.getElementById('age').value.trim())?Number(document.getElementById('age').value.trim()):null,gender:document.getElementById('gender').value||null,phone:document.getElementById('mobile').value.trim()||null,referring_doctor:document.getElementById('doctor').value.trim()||null,address:null,total_bill:Number(document.getElementById('totalBill').value||0),discount_amount:Number(document.getElementById('discountAmount').value||0),amount_paid:Number(document.getElementById('amountPaid').value||0),due_amount:Number(document.getElementById('dueAmount').value||0)};
  const orders=[...document.querySelectorAll('.orderrow')].map(r=>({name:r.querySelector('.oname').value,price:r.querySelector('.oprice').value})).filter(t=>t.name);
  try{let patientId;if(editId){const {data,error}=await supabaseClient.from('patients').update(patientPayload).eq('id',Number(editId)).select().single();if(error)throw error;patientId=data.id;}else{const {data,error}=await supabaseClient.from('patients').insert(patientPayload).select().single();if(error)throw error;patientId=data.id;}
  if(orders.length){const rows=orders.map(t=>({patient_id:Number(patientId),test_name:t.name,result_value:null,unit:null,reference_range:suggestedRange(t.name)||null,result_status:'Pending',remarks:priceRemark(t.price)||null}));const {error}=await supabaseClient.from('test_results').insert(rows);if(error)throw error;}
@@ -244,7 +263,7 @@ async function loadPatients(){
   patients=(patientRows||[]).map(p=>({
     id:String(p.id), dbid:p.id, labno:p.lab_number, date:(p.created_at||'').slice(0,10), time:(p.created_at||'').slice(11,16),
     name:p.patient_name, age:p.age_years==null?'':String(p.age_years), gender:p.gender||'',
-    mobile:p.phone||'', doctor:p.referring_doctor||'',
+    mobile:p.phone||'', doctor:p.referring_doctor||'', totalBill:Number(p.total_bill||0), discountAmount:Number(p.discount_amount||0), amountPaid:Number(p.amount_paid||0), dueAmount:Number(p.due_amount||0),
     tests:(resultRows||[]).filter(r=>r.patient_id===p.id).map(r=>({
       dbid:r.id, name:r.test_name, result:r.result_value||'', range:r.reference_range||'', unit:r.unit||'', price:parsePrice(r.remarks)
     }))
@@ -255,7 +274,7 @@ function resetForm(){
   document.getElementById('editId').value='';
   document.getElementById('date').value=new Date().toISOString().slice(0,10);
   document.getElementById('patientTime').value=new Date().toTimeString().slice(0,5);
-  document.getElementById('orderTests').innerHTML='';addOrderTest();
+  document.getElementById('orderTests').innerHTML='';addOrderTest();document.getElementById('discountAmount').value='0';document.getElementById('amountPaid').value='0';calculateBill();
 }
 async function renderRecords(){
   const q=(document.getElementById('search')?.value||'').toLowerCase();
@@ -269,7 +288,7 @@ async function editPatient(id){
   try { await loadPatients(); } catch(e) { alert('Could not load patient: '+e.message); return; }
   const p=patients.find(x=>x.id===String(id)); if(!p)return;
   document.getElementById('editId').value=p.id;
-  for(let [field,v] of Object.entries({pname:p.name,age:p.age,gender:p.gender,mobile:p.mobile,doctor:p.doctor,labno:p.labno,date:p.date}))
+  for(let [field,v] of Object.entries({pname:p.name,age:p.age,gender:p.gender,mobile:p.mobile,doctor:p.doctor,labno:p.labno,date:p.date,totalBill:p.totalBill,discountAmount:p.discountAmount,amountPaid:p.amountPaid,dueAmount:p.dueAmount}))
     document.getElementById(field).value=v??'';
   showTab('new',document.querySelectorAll('.tabs button')[0]);
 }
@@ -333,7 +352,7 @@ async function login(){
     if(error) throw error;
     document.getElementById('login').style.display='none';
     document.getElementById('app').style.display='block';
-    document.getElementById('date').value=new Date().toISOString().slice(0,10);document.getElementById('patientTime').value=new Date().toTimeString().slice(0,5);document.getElementById('orderTests').innerHTML='';addOrderTest();
+    document.getElementById('date').value=new Date().toISOString().slice(0,10);document.getElementById('patientTime').value=new Date().toTimeString().slice(0,5);document.getElementById('orderTests').innerHTML='';addOrderTest();document.getElementById('discountAmount').value='0';document.getElementById('amountPaid').value='0';calculateBill();
     await loadPatients();
     addTest(); await refreshSelect(); await refreshResultPatientSelect(); await renderRecords();
     msg.textContent='';
