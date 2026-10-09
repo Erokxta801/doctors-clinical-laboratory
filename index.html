@@ -91,10 +91,10 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLI
 let patients = [];
 const commonTests=[
 'CBC','Hemoglobin (Hb)','RBC Count','Hematocrit (HCT/PCV)','MCV','MCH','MCHC','RDW-CV','TLC / WBC','Neutrophils','Lymphocytes','Monocytes','Eosinophils','Basophils','Platelet Count','MPV','PDW','Reticulocyte Count','Peripheral Blood Film',
-'LFT','ALT (SGPT)','AST (SGOT)','Alkaline Phosphatase (ALP)','GGT','Total Bilirubin','Direct Bilirubin','Indirect Bilirubin','Total Protein','Albumin','Globulin','A/G Ratio',
-'RFT / KFT','Urea','BUN','Creatinine','eGFR','Uric Acid','Lipid Profile','Total Cholesterol','Triglycerides','HDL Cholesterol','LDL Cholesterol','VLDL Cholesterol',
-'Thyroid Profile (TFT)','TSH','Total T3','Total T4','Free T3 (FT3)','Free T4 (FT4)','HbA1c','Blood Sugar Fasting','Blood Sugar Random','2 Hours PP Glucose','OGTT 2-hour Glucose','Sodium','Potassium','Chloride','Bicarbonate','Calcium','Phosphate','Magnesium','Electrolytes Profile','Coagulation Profile','Iron Profile','H. pylori Profile','Dengue Profile','Hepatitis Screening Profile','Diabetes Profile',
-'Urine Complete','Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals',
+'LFT','Liver Function Test','ALT (SGPT)','AST (SGOT)','Alkaline Phosphatase (ALP)','GGT','Total Bilirubin','Direct Bilirubin','Indirect Bilirubin','Total Protein','Albumin','Globulin','A/G Ratio',
+'RFT / KFT','RFT','KFT','Renal Function Test','Urea','BUN','Creatinine','eGFR','Uric Acid','Lipid Profile','Total Cholesterol','Triglycerides','HDL Cholesterol','LDL Cholesterol','VLDL Cholesterol',
+'Thyroid Profile (TFT)','TFT','TSH','Total T3','Total T4','Free T3 (FT3)','Free T4 (FT4)','HbA1c','Blood Sugar Fasting','Blood Sugar Random','2 Hours PP Glucose','OGTT 2-hour Glucose','Sodium','Potassium','Chloride','Bicarbonate','Calcium','Phosphate','Magnesium','Electrolytes Profile','Coagulation Profile','Iron Profile','H. pylori Profile','Dengue Profile','Hepatitis Screening Profile','Hepatitis Profile','Diabetes Profile','Cardiac Profile','Pancreatic Profile','Arthritis Profile','Fever Profile','Anemia Profile','Bone Profile','Pregnancy Profile',
+'Urine Complete','Urine DR','Urine Color','Urine Appearance','Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals',
 'H. pylori IgG','H. pylori IgM','H. pylori Stool Antigen','CRP','hs-CRP','ESR','PT','INR','APTT','D-Dimer','Amylase','Lipase','Iron','Ferritin','TIBC','Vitamin B12','Vitamin D (25-OH)',
 'Stool Color','Stool Consistency','Stool Mucus','Stool Blood','Stool Ova','Stool Cysts','Stool Pus Cells','Stool RBC','Pregnancy Test (Urine hCG)','Pregnancy Test (Serum hCG)','HBsAg','Anti-HCV','HIV 1/2 Screen','Dengue NS1','Dengue IgM','Dengue IgG','Malaria Parasite (MP)','Typhoid IgM','Widal Test','ASO Titre','Rheumatoid Factor (RF)','Anti-CCP','ANA Screen','H. pylori Rapid Test','Stool Complete','Stool Occult Blood','Stool Reducing Substances','Blood Group ABO/Rh','Coombs Direct (DAT)','Coombs Indirect (IAT)','Semen Analysis','Other'];
 const referenceRanges={
@@ -109,7 +109,7 @@ const referenceRanges={
 'Total Cholesterol':{all:'Desirable: <200 mg/dL'},'Triglycerides':{all:'Normal: <150 mg/dL'},'HDL Cholesterol':{all:'Male: >40; Female: >50 mg/dL'},'LDL Cholesterol':{all:'Optimal: <100 mg/dL'},'VLDL Cholesterol':{all:'Typically: 5–40 mg/dL'},
 'TSH':{all:'Approximately 0.4–4.0 mIU/L'},'Total T3':{all:'Approximately 80–200 ng/dL'},'Total T4':{all:'Approximately 5.0–12.0 µg/dL'},'Free T3 (FT3)':{all:'Use assay-specific range'},'Free T4 (FT4)':{all:'Approximately 0.8–1.8 ng/dL'},
 'HbA1c':{all:'Normal <5.7%; Prediabetes 5.7–6.4%; Diabetes ≥6.5% (diagnosis requires clinical confirmation)'},'Blood Sugar Fasting':{all:'Typical: 70–99 mg/dL'},'Blood Sugar Random':{all:'Interpret with clinical context; ≥200 mg/dL with symptoms may indicate diabetes'},'2 Hours PP Glucose':{all:'Common target <140 mg/dL in non-diabetic adults'},
-'Sodium':{all:'135–145 mmol/L'},'Potassium':{all:'3.5–5.1 mmol/L'},'Chloride':{all:'98–107 mmol/L'},'Bicarbonate':{all:'22–29 mmol/L'},'Urine pH':{all:'4.5–8.0'},'Urine Specific Gravity':{all:'1.005–1.030'},
+'Sodium':{all:'135–145 mmol/L'},'Potassium':{all:'3.5–5.1 mmol/L'},'Chloride':{all:'98–107 mmol/L'},'Bicarbonate':{all:'22–29 mmol/L'},'Urine Color':{all:'Pale yellow to amber'},'Urine Appearance':{all:'Clear'},'Urine pH':{all:'4.5–8.0'},'Urine Specific Gravity':{all:'1.005–1.030'},
 'CRP':{all:'Typically <5 mg/L (assay-dependent)'},'hs-CRP':{all:'Use assay-specific cardiovascular risk interpretation; infection/inflammation can elevate it'},'ESR':{all:'Age/sex-dependent; use laboratory range'},'PT':{all:'Approximately 11–13.5 seconds; reagent-dependent'},'INR':{all:'Usually 0.8–1.1 if not on anticoagulants'},'APTT':{all:'Approximately 25–35 seconds; reagent-dependent'},'D-Dimer':{all:'Often <500 ng/mL FEU; method and age-adjusted cutoffs vary'},'Amylase':{all:'Approximately 30–110 U/L'},'Lipase':{all:'Approximately 13–60 U/L'},
 'Globulin':{all:'Approximately 2.0–3.5 g/dL'},'A/G Ratio':{all:'Approximately 1.0–2.2'},'Reticulocyte Count':{all:'Adults: approximately 0.5–2.5 %'},'eGFR':{all:'≥90 mL/min/1.73 m² is generally normal; interpret with age and urine findings'},'OGTT 2-hour Glucose':{all:'<140 mg/dL normal; 140–199 impaired glucose tolerance; ≥200 diabetes range (clinical confirmation required)'},'Calcium':{all:'8.5–10.5 mg/dL'},'Phosphate':{all:'Adults: 2.5–4.5 mg/dL'},'Magnesium':{all:'1.7–2.2 mg/dL'},
 'Urine Protein':{all:'Negative'},'Urine Glucose':{all:'Negative'},'Urine Ketones':{all:'Negative'},'Urine Blood':{all:'Negative'},'Urine Bilirubin':{all:'Negative'},'Urine Urobilinogen':{all:'Typically 0.2–1.0 EU/dL; method-specific'},'Urine Nitrite':{all:'Negative'},'Urine Leukocyte Esterase':{all:'Negative'},'Urine RBC':{all:'Typically 0–2 /HPF'},'Urine WBC':{all:'Typically 0–5 /HPF'},'Urine Epithelial Cells':{all:'Few /HPF may be seen; interpret sample quality'},'Urine Casts':{all:'Usually none or occasional hyaline casts'},'Urine Crystals':{all:'None or occasional; depends on crystal type and urine pH'},
@@ -121,10 +121,16 @@ function suggestedRange(name){const g=document.getElementById('gender')?.value||
 const testProfiles={
  'CBC':['Hemoglobin (Hb)','RBC Count','Hematocrit (HCT/PCV)','MCV','MCH','MCHC','RDW-CV','TLC / WBC','Neutrophils','Lymphocytes','Monocytes','Eosinophils','Basophils','Platelet Count','MPV','PDW'],
  'LFT':['ALT (SGPT)','AST (SGOT)','Alkaline Phosphatase (ALP)','GGT','Total Bilirubin','Direct Bilirubin','Indirect Bilirubin','Total Protein','Albumin','Globulin','A/G Ratio'],
- 'RFT / KFT':['Urea','BUN','Creatinine','eGFR','Uric Acid'],
+ 'Liver Function Test':['ALT (SGPT)','AST (SGOT)','Alkaline Phosphatase (ALP)','GGT','Total Bilirubin','Direct Bilirubin','Indirect Bilirubin','Total Protein','Albumin','Globulin','A/G Ratio'],
+ 'RFT / KFT':['Urea','BUN','Creatinine','eGFR','Uric Acid','Sodium','Potassium','Chloride','Bicarbonate'],
+ 'RFT':['Urea','BUN','Creatinine','eGFR','Uric Acid','Sodium','Potassium','Chloride','Bicarbonate'],
+ 'KFT':['Urea','BUN','Creatinine','eGFR','Uric Acid','Sodium','Potassium','Chloride','Bicarbonate'],
+ 'Renal Function Test':['Urea','BUN','Creatinine','eGFR','Uric Acid','Sodium','Potassium','Chloride','Bicarbonate'],
  'Lipid Profile':['Total Cholesterol','Triglycerides','HDL Cholesterol','LDL Cholesterol','VLDL Cholesterol'],
  'Thyroid Profile (TFT)':['TSH','Total T3','Total T4','Free T3 (FT3)','Free T4 (FT4)'],
- 'Urine Complete':['Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals'],
+ 'TFT':['TSH','Total T3','Total T4','Free T3 (FT3)','Free T4 (FT4)'],
+ 'Urine Complete':['Urine Color','Urine Appearance','Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals'],
+ 'Urine DR':['Urine Color','Urine Appearance','Urine pH','Urine Specific Gravity','Urine Protein','Urine Glucose','Urine Ketones','Urine Blood','Urine Bilirubin','Urine Urobilinogen','Urine Nitrite','Urine Leukocyte Esterase','Urine RBC','Urine WBC','Urine Epithelial Cells','Urine Casts','Urine Crystals'],
  'Stool Complete':['Stool Color','Stool Consistency','Stool Mucus','Stool Blood','Stool Ova','Stool Cysts','Stool Pus Cells','Stool RBC','Stool Occult Blood','Stool Reducing Substances'],
  'Electrolytes Profile':['Sodium','Potassium','Chloride','Bicarbonate'],
  'Coagulation Profile':['PT','INR','APTT'],
@@ -132,17 +138,34 @@ const testProfiles={
  'H. pylori Profile':['H. pylori IgG','H. pylori IgM','H. pylori Stool Antigen'],
  'Dengue Profile':['Dengue NS1','Dengue IgM','Dengue IgG'],
  'Hepatitis Screening Profile':['HBsAg','Anti-HCV'],
- 'Diabetes Profile':['Blood Sugar Fasting','HbA1c']
+ 'Hepatitis Profile':['HBsAg','Anti-HCV'],
+ 'Diabetes Profile':['Blood Sugar Fasting','HbA1c'],
+ 'Cardiac Profile':['Total Cholesterol','Triglycerides','HDL Cholesterol','LDL Cholesterol','VLDL Cholesterol','hs-CRP'],
+ 'Pancreatic Profile':['Amylase','Lipase'],
+ 'Arthritis Profile':['Rheumatoid Factor (RF)','Anti-CCP','CRP','ESR'],
+ 'Fever Profile':['CBC','Malaria Parasite (MP)','Dengue NS1','Dengue IgM','Dengue IgG','Typhoid IgM','CRP'],
+ 'Anemia Profile':['CBC','Iron','Ferritin','TIBC','Vitamin B12'],
+ 'Bone Profile':['Calcium','Phosphate','Alkaline Phosphatase (ALP)','Vitamin D (25-OH)'],
+ 'Pregnancy Profile':['Pregnancy Test (Urine hCG)','Pregnancy Test (Serum hCG)']
 };
-function expandProfile(name){return testProfiles[name]||null;}
+function expandProfile(name){
+ const key=String(name||'').trim();
+ if(testProfiles[key]) return testProfiles[key];
+ const normalized=key.toLowerCase().replace(/[^a-z0-9]/g,'');
+ const aliases={lft:'LFT',liverfunctiontest:'Liver Function Test',rft:'RFT',kft:'KFT',renalfunctiontest:'Renal Function Test',lipidprofile:'Lipid Profile',tft:'TFT',thyroidprofile:'Thyroid Profile (TFT)',urinedr:'Urine DR',urinecomplete:'Urine Complete',stoolcomplete:'Stool Complete',electrolytes:'Electrolytes Profile',ironprofile:'Iron Profile',coagulationprofile:'Coagulation Profile',hepatitisprofile:'Hepatitis Profile',diabetesprofile:'Diabetes Profile'};
+ return testProfiles[aliases[normalized]]||null;
+}
+function flattenProfile(name,seen=new Set()){
+ const key=String(name||'').trim(); if(seen.has(key)) return []; const parts=expandProfile(key); if(!parts) return [key]; seen.add(key); const out=[]; for(const part of parts){const nested=expandProfile(part); if(nested) out.push(...flattenProfile(part,new Set(seen))); else out.push(part);} return out;
+}
 function addOrderTest(t={name:'',price:''}){
  const d=document.createElement('div');d.className='orderrow';
  d.innerHTML=`<select class="oname"><option value="">Choose test / profile</option>${commonTests.map(x=>`<option ${x===t.name?'selected':''}>${x}</option>`).join('')}</select><input class="oprice" type="number" min="0" step="0.01" placeholder="Price (Rs.)" value="${esc(t.price||'')}"><button type="button" class="danger" onclick="this.parentElement.remove()">Remove</button>`;
  document.getElementById('orderTests').appendChild(d);
  d.querySelector('.oname').addEventListener('change',()=>{
    const selected=d.querySelector('.oname').value;const parts=expandProfile(selected);if(!parts)return;
-   const price=d.querySelector('.oprice').value;d.remove();
-   parts.forEach((name,i)=>addOrderTest({name,price:i===0?price:'0'}));
+   const price=d.querySelector('.oprice').value;const flattened=flattenProfile(selected);d.remove();
+   flattened.forEach((name,i)=>addOrderTest({name,price:i===0?price:'0'}));
  });
 }
 function parsePrice(remarks){const m=String(remarks||'').match(/PRICE:([0-9.]+)/);return m?m[1]:''}
