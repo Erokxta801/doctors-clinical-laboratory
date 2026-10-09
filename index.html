@@ -75,8 +75,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <div style="overflow-x:auto;margin-top:10px"><table><thead><tr><th>Lab No.</th><th>Date</th><th>Patient</th><th>Tests</th><th class="no-print">Actions</th></tr></thead><tbody id="recordsBody"></tbody></table></div>
 </section>
 <section id="tab-report" class="card" style="display:none">
-<h2>Report</h2><label>Choose saved patient</label><select id="reportSelect" onchange="renderReport()"><option value="">Select patient</option></select>
-<div id="reportArea"></div><div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+<h2>Report / رپورٹ</h2><label>Choose saved patient</label><select id="reportSelect" onchange="renderReport()"><option value="">Select patient</option></select>
+<div class="no-print" style="margin:10px 0"><button type="button" onclick="openReportValues()">+ Add / Edit Test Values</button> <button type="button" class="secondary" onclick="refreshReportNow()">Refresh Report</button></div><p class="small no-print">اہم: اس صفحے پر رپورٹ دیکھی اور پرنٹ کی جاتی ہے۔ ٹیسٹ کی ویلیوز درج یا تبدیل کرنے کے لیے اوپر “Add / Edit Test Values” دبائیں۔</p><div id="reportArea"></div><div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
 </section>
 </main>
 </div>
@@ -214,6 +214,15 @@ async function refreshSelect(selected=''){
   if(selected)renderReport();
 }
 function selectReport(id){showTab('report',document.querySelectorAll('.tabs button')[2]);refreshSelect(id)}
+function openReportValues(){
+  const patientId=document.getElementById('reportSelect').value;
+  if(!patientId){alert('پہلے رپورٹ والے خانے سے مریض منتخب کریں۔');return;}
+  showTab('results',document.querySelectorAll('.tabs button')[1]);
+  refreshResultPatientSelect(patientId).then(()=>{document.getElementById('resultPatientSelect').value=patientId;});
+}
+function refreshReportNow(){
+  refreshSelect(document.getElementById('reportSelect').value);
+}
 function renderReport(){
   const p=patients.find(x=>x.id===document.getElementById('reportSelect').value),a=document.getElementById('reportArea');
   if(!p){a.innerHTML='';return}
