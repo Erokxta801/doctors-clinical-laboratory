@@ -18,7 +18,9 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 #app{display:none}#login{max-width:420px;margin:30px auto}.notice{border-left:4px solid #d98e04;background:#fff8e8;padding:10px 12px;font-size:13px;line-height:1.45}
 .testrow{display:grid;grid-template-columns:1.5fr 1fr 1.5fr auto auto auto;gap:6px;margin:7px 0}.orderrow{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin:7px 0}.subhead{margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:6px}.labbrand{display:flex;align-items:center;gap:12px}.lab-logo{width:54px;height:54px;flex:0 0 54px}.phone{font-weight:700;color:#fff;margin-top:5px}
 @media(max-width:650px){.row,.row3{grid-template-columns:1fr}.testrow,.orderrow{grid-template-columns:1fr 1fr}.testrow>*{min-width:0}.lab-logo{width:44px;height:44px;flex-basis:44px}header h1{font-size:19px}table{font-size:12px}th,td{padding:7px 4px}}
-@media print{@page{size:letter portrait;margin:0.45in}header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status{font-weight:bold}.report-result{font-weight:700}.report-head h2{margin:0}.report-paper{width:100%;max-width:none!important;page-break-inside:auto}.report-table tr{page-break-inside:avoid} }
+@media print{@page{size:letter portrait;margin:0.45in}header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status{font-weight:bold}.report-result{font-weight:700}.report-head h2{margin:0}.report-paper{width:100%;max-width:none!important;page-break-inside:auto}.report-table tr{page-break-inside:avoid}#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,.report-price,.report-billing{display:none!important} }
+/* Billing is for patient entry only; never display it in the report. */
+#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,.report-price,.report-billing{display:none!important}
 </style>
 </head>
 <body>
@@ -82,7 +84,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 <button type="button" class="secondary" onclick="goToSelectedReport()">Open / Print Report</button>
 </section>
 <section id="tab-records" class="card" style="display:none">
-<h2>Patient Records</h2><label>Search by name, mobile, lab number</label><input id="search" oninput="renderRecords()" placeholder="Type to search...">
+<h2>Patient Records</h2><p class="small">SMS Bill opens your phone’s SMS app with test names and prices pre-filled. Review and tap Send. Automatic SMS delivery needs a configured SMS gateway.</p><label>Search by name, mobile, lab number</label><input id="search" oninput="renderRecords()" placeholder="Type to search...">
 <div style="overflow-x:auto;margin-top:10px"><table><thead><tr><th>Lab No.</th><th>Date</th><th>Patient</th><th>Tests</th><th class="no-print">Actions</th></tr></thead><tbody id="recordsBody"></tbody></table></div>
 </section>
 <section id="tab-report" class="card" style="display:none">
@@ -281,9 +283,22 @@ async function renderRecords(){
   const body=document.getElementById('recordsBody'); if(!body)return;
   try { await loadPatients(); } catch(err) { body.innerHTML='<tr><td colspan="5">Could not load records: '+esc(err.message)+'</td></tr>'; return; }
   body.innerHTML=patients.filter(p=>[p.name,p.mobile,p.labno,p.id].join(' ').toLowerCase().includes(q)).map(p=>
-    `<tr><td>${esc(p.labno)}</td><td>${esc(p.date)}</td><td>${esc(p.name)}<br><span class="small">${esc(p.age)} / ${esc(p.gender)}</span></td><td>${p.tests.map(t=>esc(t.name)).join(', ')}</td><td class="no-print"><button onclick="editPatient('${p.id}')">Edit</button><button class="navy" onclick="selectReport('${p.id}')">Report</button><button class="danger" onclick="deletePatient('${p.id}')">Delete</button></td></tr>`
+    `<tr><td>${esc(p.labno)}</td><td>${esc(p.date)}</td><td>${esc(p.name)}<br><span class="small">${esc(p.age)} / ${esc(p.gender)}</span></td><td>${p.tests.map(t=>esc(t.name)).join(', ')}</td><td class="no-print"><button onclick="editPatient('${p.id}')">Edit</button><button class="secondary" onclick="sendBillSMS('${p.id}')">SMS Bill</button><button class="navy" onclick="selectReport('${p.id}')">Report</button><button class="danger" onclick="deletePatient('${p.id}')">Delete</button></td></tr>`
   ).join('')||'<tr><td colspan="5">No records found.</td></tr>';
 }
+function sendBillSMS(id){
+  const p=patients.find(x=>x.id===String(id));
+  if(!p){alert('Patient record not found.');return;}
+  const phone=String(p.mobile||'').replace(/[^0-9+]/g,'');
+  if(!phone){alert('Is patient ka phone number record mein maujood nahi. Pehle patient entry edit karke number add karein.');return;}
+  const tests=p.tests||[];
+  const lines=tests.map(t=>`- ${t.name}: Rs. ${t.price!==''&&t.price!=null?t.price:'0'}`);
+  const total=Number(p.totalBill||0), discount=Number(p.discountAmount||0), paid=Number(p.amountPaid||0), due=Number(p.dueAmount||Math.max(0,total-discount-paid));
+  const message=`Doctors Clinical Laboratory\nPatient: ${p.name}\nLab No: ${p.labno}\nTests:\n${lines.join('\n')}\nTotal: Rs. ${total}\nDiscount: Rs. ${discount}\nPaid: Rs. ${paid}\nDue: Rs. ${due}\nContact: 03060000801`;
+  // Opens the phone's SMS composer; the user must tap Send. Automatic sending requires an SMS gateway/backend.
+  window.location.href=`sms:${phone}?body=${encodeURIComponent(message)}`;
+}
+
 async function editPatient(id){
   try { await loadPatients(); } catch(e) { alert('Could not load patient: '+e.message); return; }
   const p=patients.find(x=>x.id===String(id)); if(!p)return;
