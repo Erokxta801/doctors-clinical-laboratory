@@ -104,6 +104,28 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
   }
 }
 </style>
+
+/* FINAL PRINT FIX: keep report header and patient details visible; hide only flag/status and billing. */
+@media print {
+  html, body { height:auto!important; overflow:visible!important; }
+  body * { visibility:hidden; }
+  #tab-report, #tab-report *, #reportArea, #reportArea * { visibility:visible!important; }
+  header, .tabs, .no-print, #tab-report>h2, #tab-report>label, #reportSelect { display:none!important; }
+  #app, main, #tab-report { display:block!important; position:static!important; width:auto!important; height:auto!important; overflow:visible!important; }
+  #reportArea { display:block!important; position:static!important; visibility:visible!important; width:100%!important; height:auto!important; overflow:visible!important; }
+  #reportArea .report-paper { display:block!important; visibility:visible!important; position:static!important; width:100%!important; max-width:none!important; height:auto!important; overflow:visible!important; margin:0!important; padding:0!important; border:0!important; background:#fff!important; color:#172536!important; }
+  #reportArea .report-brand { display:flex!important; visibility:visible!important; }
+  #reportArea .report-brand-text, #reportArea .report-brand-text h1, #reportArea .report-urdu, #reportArea .report-contact, #reportArea .report-section-title { display:block!important; visibility:visible!important; color:#102b4e!important; }
+  #reportArea .report-patient-grid { display:grid!important; visibility:visible!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  #reportArea .report-patient-grid>div { display:flex!important; visibility:visible!important; }
+  #reportArea .report-table { display:table!important; visibility:visible!important; width:100%!important; border-collapse:collapse!important; }
+  #reportArea .report-table thead { display:table-header-group!important; }
+  #reportArea .report-table tbody { display:table-row-group!important; }
+  #reportArea .report-table tr { display:table-row!important; }
+  #reportArea .report-table th, #reportArea .report-table td { display:table-cell!important; visibility:visible!important; }
+  #reportArea .report-status, #reportArea .report-flag, #reportArea .flag, #reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag, #reportArea .report-price, #reportArea .report-billing, #reportArea .price, #reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due { display:none!important; }
+}
+
 </head>
 <body>
 <header><div class="labbrand"><svg class="lab-logo" viewBox="0 0 100 100" role="img" aria-label="Doctors Clinical Laboratory logo"><circle cx="50" cy="50" r="47" fill="#fff"/><path d="M42 17h16v25h25v16H58v25H42V58H17V42h25z" fill="#168a91"/><circle cx="50" cy="50" r="46" fill="none" stroke="#168a91" stroke-width="3"/></svg><div><h1>Doctors Clinical Laboratory</h1><p>ڈاکٹرز کلینیکل لیبارٹری • Laboratory Management</p><div class="phone">☎ 03060000801</div></div></div></header>
