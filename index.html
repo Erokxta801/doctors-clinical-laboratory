@@ -4,11 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Doctors Clinical Laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@page{size:letter portrait;margin:0.45in}
-:root{--navy:#12345a;--teal:#168a91;--bg:#f3f6fa;--line:#dbe3ec}
+@page{size:A4 portrait;margin:12mm}
+:root{--navy:#102b4e;--teal:#168a91;--bg:#f3f6fa;--line:#dbe3ec;--gold:#c5a45b}
 *{box-sizing:border-box}body{margin:0;font:15px Arial,sans-serif;background:var(--bg);color:#172536}
-header{background:var(--navy);color:white;padding:18px 16px}header h1{margin:0;font-size:22px}header p{margin:6px 0 0;color:#dbe9f6}
+header{background:linear-gradient(125deg,#102b4e,#174b68);color:white;padding:20px 16px;border-bottom:4px solid var(--gold)}header h1{margin:0;font-size:24px;letter-spacing:.2px}header p{margin:7px 0 0;color:#f3e9d2;font-family:"Noto Nastaliq Urdu",serif;font-size:17px;line-height:1.9}
 main{max-width:1100px;margin:18px auto;padding:0 12px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px #122b450a}
 .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #bdc9d6;border-radius:8px;font:inherit;background:white}button{border:0;border-radius:9px;padding:10px 14px;background:var(--teal);color:white;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#e8eef5;color:#173552}button.danger{background:#b42318}button.navy{background:var(--navy)}
@@ -18,10 +21,113 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 7px;b
 #app{display:none}#login{max-width:420px;margin:30px auto}.notice{border-left:4px solid #d98e04;background:#fff8e8;padding:10px 12px;font-size:13px;line-height:1.45}
 .testrow{display:grid;grid-template-columns:1.5fr 1fr 1.5fr auto auto auto;gap:6px;margin:7px 0}.orderrow{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin:7px 0}.subhead{margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:6px}.labbrand{display:flex;align-items:center;gap:12px}.lab-logo{width:54px;height:54px;flex:0 0 54px}.phone{font-weight:700;color:#fff;margin-top:5px}
 @media(max-width:650px){.row,.row3{grid-template-columns:1fr}.testrow,.orderrow{grid-template-columns:1fr 1fr}.testrow>*{min-width:0}.lab-logo{width:44px;height:44px;flex-basis:44px}header h1{font-size:19px}table{font-size:12px}th,td{padding:7px 4px}}
-@media print{@page{size:letter portrait;margin:0.45in}header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status{display:none!important}.report-result{font-weight:700}.report-head h2{margin:0}.report-paper{width:100%;max-width:none!important;page-break-inside:auto}.report-table tr{page-break-inside:avoid}#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,.report-price,.report-billing{display:none!important} }
+@media print{@page{size:A4 portrait;margin:12mm}header,.no-print,#app>.notice{display:none!important}body{background:#fff!important;color:#111;font-size:11px}.card{box-shadow:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}main{margin:0;max-width:none;padding:0}.tabs{display:none!important}#tab-report{display:block!important}.report-paper{border:0!important;padding:0!important;max-width:none!important}.report-brand{border-bottom:2px solid #168a91;padding-bottom:10px;margin-bottom:12px}.report-titlebar{background:#f0f5f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-table th{background:#edf2f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-patient-grid{border:1px solid #b9c7d2!important}.report-patient-grid>div{border-bottom:1px solid #e0e6eb;padding:6px}.report-footer{position:relative;margin-top:28px}.report-range{color:#333}.report-status,.report-flag,.flag,.status-flag,.result-flag,.abnormal-flag,.report-price,.report-billing,.price,.billing,.total-bill,.discount,.due{display:none!important}.report-result{font-weight:700}.report-head h2{margin:0}.report-paper{width:100%;max-width:none!important;page-break-inside:auto}.report-table{border:1px solid #b9c7d2;border-radius:8px;overflow:hidden}.report-table thead th{background:#102b4e!important;color:#fff!important;border-bottom:2px solid #c5a45b!important;font-size:12px;letter-spacing:.2px;padding:11px 9px!important}.report-table tbody td{padding:10px 9px!important;border-bottom:1px solid #dbe3ec!important;font-size:12px}.report-table tbody tr:nth-child(even){background:#f6f9fc!important}.report-table .report-result{font-weight:700;color:#102b4e}.report-table tr{page-break-inside:avoid}#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,#reportArea .flag,#reportArea .report-flag,#reportArea .status-flag,#reportArea .result-flag,#reportArea .abnormal-flag,#reportArea .report-status,.report-price,.report-billing{display:none!important} }
 /* Billing is for patient entry only; never display it in the report. */
-#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,.report-price,.report-billing{display:none!important}
+#reportArea .price,#reportArea .billing,#reportArea .total-bill,#reportArea .discount,#reportArea .due,#reportArea .flag,#reportArea .report-flag,#reportArea .status-flag,#reportArea .result-flag,#reportArea .abnormal-flag,#reportArea .report-status,.report-price,.report-billing{display:none!important}
+
+/* Professional printable report: retain lab identity and patient details; show no flag/status or prices. */
+.report-paper{background:#fff;padding:24px;max-width:950px;margin:16px auto;color:#172536;border:1px solid #dbe3ec;border-radius:12px;font-family:Arial,sans-serif}
+.report-brand{display:flex;align-items:center;gap:15px;border-bottom:3px solid var(--teal);padding-bottom:15px;margin-bottom:16px}
+.report-logo{width:62px;height:62px;flex:0 0 62px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--navy);color:#fff;font-size:43px;line-height:1}
+.report-brand-text h1{font-size:25px;margin:0;color:var(--navy);letter-spacing:.2px}
+.report-urdu{font-family:"Noto Nastaliq Urdu",serif;font-size:20px;line-height:2;color:#174b68}
+.report-contact{font-size:11px;color:#526579;margin-top:3px}.report-contact span{padding:0 6px;color:var(--gold)}
+.report-doctor-name{margin-top:7px;font-size:15px;font-weight:800;color:#102b4e;letter-spacing:.15px;border-left:4px solid #c5a45b;padding:5px 9px;background:#f2f6fa;display:inline-block}
+@media print{.report-doctor-name{color:#102b4e!important;background:#f2f6fa!important;border-left-color:#c5a45b!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.report-contact{color:#526579!important}}
+.report-section-title{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;letter-spacing:1px;color:#fff;background:var(--navy);padding:10px 12px;margin-bottom:12px;border-radius:4px}
+.report-section-title span{font-family:"Noto Nastaliq Urdu",serif;font-size:14px;letter-spacing:0}
+.report-patient-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe3ec;border-radius:6px;overflow:hidden;margin-bottom:18px}
+.report-patient-grid>div{display:flex;gap:10px;padding:9px 11px;border-bottom:1px solid #e4eaf0;min-width:0}
+.report-patient-grid>div:nth-child(odd){border-right:1px solid #e4eaf0}
+.report-patient-grid b{font-size:11px;color:#526579;min-width:105px}.report-patient-grid span{font-size:12px;font-weight:600;overflow-wrap:anywhere}
+.report-table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #dbe3ec}
+.report-table th{background:var(--navy);color:#fff;text-align:left;padding:11px 9px;border-bottom:3px solid var(--gold)}
+.report-table td{padding:10px 9px;border-bottom:1px solid #dbe3ec}
+.report-table tbody tr:nth-child(even){background:#f5f8fb}
+.report-table .report-result{font-weight:700;color:var(--navy)}
+@media(max-width:650px){.report-paper{padding:12px}.report-brand-text h1{font-size:18px}.report-logo{width:46px;height:46px;flex-basis:46px;font-size:32px}.report-patient-grid{grid-template-columns:1fr}.report-patient-grid>div:nth-child(odd){border-right:0}.report-table{font-size:10px}.report-table th,.report-table td{padding:7px 5px}.report-patient-grid b{min-width:90px}}
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  body{background:#fff!important;color:#111;font-size:11px}
+  header,.no-print,#app>.notice{display:none!important}
+  #app,main,#tab-report{display:block!important;visibility:visible!important}
+  main{margin:0!important;max-width:none!important;padding:0!important}
+  #tab-report{border:0!important;box-shadow:none!important;padding:0!important;margin:0!important}
+  #tab-report>h2,#tab-report>label,#reportSelect{display:none!important}
+  .tabs{display:none!important}
+  .report-paper{display:block!important;visibility:visible!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important;max-width:none!important;width:100%!important}
+  .report-brand{display:flex!important;border-bottom:3px solid #168a91!important;padding-bottom:12px!important;margin-bottom:15px!important;break-inside:avoid}
+  .report-logo{background:#102b4e!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-urdu,.report-brand-text h1,.report-contact,.report-section-title,.report-patient-grid,.report-table{visibility:visible!important}
+  .report-section-title{background:#102b4e!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-patient-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;margin-bottom:16px!important}
+  .report-patient-grid>div{display:flex!important;padding:7px!important}
+  .report-table{display:table!important;border-collapse:collapse!important;width:100%!important}
+  .report-table thead{display:table-header-group!important}.report-table tbody{display:table-row-group!important}
+  .report-table th{background:#102b4e!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-table tbody tr:nth-child(even){background:#f5f8fb!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-status,.report-flag,.flag,.status-flag,.result-flag,.abnormal-flag,.report-price,.report-billing,.price,.billing,.total-bill,.discount,.due{display:none!important}
+}
+
+
+/* FINAL REPORT VISIBILITY FIX: keep lab header and patient details visible; hide only flag/status and billing fields. */
+#reportArea { display:block; color:#172536; }
+#reportArea .report-paper { display:block; visibility:visible; color:#172536; background:#fff; }
+#reportArea .report-brand, #reportArea .report-brand-text, #reportArea .report-urdu,
+#reportArea .report-section-title, #reportArea .report-patient-grid,
+#reportArea .report-patient-grid>div, #reportArea .report-table,
+#reportArea .report-table thead, #reportArea .report-table tbody,
+#reportArea .report-table tr, #reportArea .report-table th, #reportArea .report-table td {
+  visibility:visible;
+}
+#reportArea .report-flag, #reportArea .report-status, #reportArea .flag,
+#reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag,
+#reportArea .report-price, #reportArea .report-billing, #reportArea .price,
+#reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due {
+  display:none!important;
+}
+@media print {
+  body * { visibility:hidden; }
+  #reportArea, #reportArea * { visibility:visible!important; }
+  #reportArea { display:block!important; position:absolute; left:0; top:0; width:100%; }
+  #reportArea .report-paper { display:block!important; width:100%!important; margin:0!important; padding:0!important; border:0!important; }
+  #reportArea .report-brand { display:flex!important; }
+  #reportArea .report-patient-grid { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  #reportArea .report-table { display:table!important; width:100%!important; }
+  #reportArea .report-table thead { display:table-header-group!important; }
+  #reportArea .report-table tbody { display:table-row-group!important; }
+  #reportArea .report-table tr { display:table-row!important; }
+  #reportArea .report-table th, #reportArea .report-table td { display:table-cell!important; }
+  #reportArea .report-flag, #reportArea .report-status, #reportArea .flag,
+  #reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag,
+  #reportArea .report-price, #reportArea .report-billing, #reportArea .price,
+  #reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due {
+    display:none!important;
+  }
+}
 </style>
+
+/* FINAL PRINT FIX: keep report header and patient details visible; hide only flag/status and billing. */
+@media print {
+  html, body { height:auto!important; overflow:visible!important; }
+  body * { visibility:hidden; }
+  #tab-report, #tab-report *, #reportArea, #reportArea * { visibility:visible!important; }
+  header, .tabs, .no-print, #tab-report>h2, #tab-report>label, #reportSelect { display:none!important; }
+  #app, main, #tab-report { display:block!important; position:static!important; width:auto!important; height:auto!important; overflow:visible!important; }
+  #reportArea { display:block!important; position:static!important; visibility:visible!important; width:100%!important; height:auto!important; overflow:visible!important; }
+  #reportArea .report-paper { display:block!important; visibility:visible!important; position:static!important; width:100%!important; max-width:none!important; height:auto!important; overflow:visible!important; margin:0!important; padding:0!important; border:0!important; background:#fff!important; color:#172536!important; }
+  #reportArea .report-brand { display:flex!important; visibility:visible!important; }
+  #reportArea .report-brand-text, #reportArea .report-brand-text h1, #reportArea .report-urdu, #reportArea .report-contact, #reportArea .report-section-title { display:block!important; visibility:visible!important; color:#102b4e!important; }
+  #reportArea .report-patient-grid { display:grid!important; visibility:visible!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  #reportArea .report-patient-grid>div { display:flex!important; visibility:visible!important; }
+  #reportArea .report-table { display:table!important; visibility:visible!important; width:100%!important; border-collapse:collapse!important; }
+  #reportArea .report-table thead { display:table-header-group!important; }
+  #reportArea .report-table tbody { display:table-row-group!important; }
+  #reportArea .report-table tr { display:table-row!important; }
+  #reportArea .report-table th, #reportArea .report-table td { display:table-cell!important; visibility:visible!important; }
+  #reportArea .report-status, #reportArea .report-flag, #reportArea .flag, #reportArea .status-flag, #reportArea .result-flag, #reportArea .abnormal-flag, #reportArea .report-price, #reportArea .report-billing, #reportArea .price, #reportArea .billing, #reportArea .total-bill, #reportArea .discount, #reportArea .due { display:none!important; }
+}
+
 </head>
 <body>
 <header><div class="labbrand"><svg class="lab-logo" viewBox="0 0 100 100" role="img" aria-label="Doctors Clinical Laboratory logo"><circle cx="50" cy="50" r="47" fill="#fff"/><path d="M42 17h16v25h25v16H58v25H42V58H17V42h25z" fill="#168a91"/><circle cx="50" cy="50" r="46" fill="none" stroke="#168a91" stroke-width="3"/></svg><div><h1>Doctors Clinical Laboratory</h1><p>ڈاکٹرز کلینیکل لیبارٹری • Laboratory Management</p><div class="phone">☎ 03060000801</div></div></div></header>
@@ -329,13 +435,22 @@ function renderReport(){
     const result=String(t.result||'').trim();
     return `<tr><td class="report-testname">${esc(t.name)}</td><td class="report-result">${esc(result||'Pending')}</td><td class="report-range">${esc(t.range||'—')}</td></tr>`;
   }).join('');
-  a.innerHTML=`<div class="report-paper" style="background:#fff;padding:12px 0;max-width:950px;margin:16px auto;color:#111;font-family:Arial,sans-serif">
-    <table class="report-table" style="width:100%;border-collapse:collapse;font-size:12px">
-      <thead><tr>
-        <th style="text-align:left;border-bottom:1px solid #333;padding:9px 7px">Test Name</th>
-        <th style="text-align:left;border-bottom:1px solid #333;padding:9px 7px">Result</th>
-        <th style="text-align:left;border-bottom:1px solid #333;padding:9px 7px">Reference / Normal Value</th>
-      </tr></thead>
+  a.innerHTML=`<div class="report-paper">
+    <div class="report-brand">
+      <div class="report-logo" aria-hidden="true">✚</div>
+      <div class="report-brand-text"><h1>Doctors Clinical Laboratory</h1><div class="report-urdu" lang="ur" dir="rtl">ڈاکٹرز کلینیکل لیبارٹری</div><div class="report-contact">Laboratory Diagnostic Report <span>•</span> Location: Kamalia <span>•</span> 03060000801</div><div class="report-doctor-name"><strong>Dr Tajammal Hussain (Pharmacist)</strong></div></div>
+    </div>
+    <div class="report-section-title">LABORATORY REPORT <span lang="ur" dir="rtl">لیبارٹری رپورٹ</span></div>
+    <div class="report-patient-grid">
+      <div><b>Patient Name</b><span>${esc(p.name||'—')}</span></div>
+      <div><b>Lab Number</b><span>${esc(p.labno||'—')}</span></div>
+      <div><b>Age / Gender</b><span>${esc(p.age||'—')} / ${esc(p.gender||'—')}</span></div>
+      <div><b>Referred By</b><span>${esc(p.doctor||'—')}</span></div>
+      <div><b>Date</b><span>${esc(p.date||'—')}</span></div>
+      <div><b>Contact</b><span>${esc(p.mobile||'—')}</span></div>
+    </div>
+    <table class="report-table">
+      <thead><tr><th>Test Name</th><th>Result</th><th>Reference / Normal Value</th></tr></thead>
       <tbody>${tests||'<tr><td colspan="3">No tests recorded.</td></tr>'}</tbody>
     </table>
   </div>`;
